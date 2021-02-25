@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1057080517305",
+    "project_id": "carpoolers-4ddcb",
+    "storage_bucket": "carpoolers-4ddcb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057080517305:android:33059df20789c4124f3168",
+        "android_client_info": {
+          "package_name": "com.example.carpoolers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057080517305-uv7q6toa2m30pmj08j36flr3v8ed3buq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUx1oGlcDD9gfqh43HMQWyvMFhFqAYOXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057080517305-uv7q6toa2m30pmj08j36flr3v8ed3buq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
