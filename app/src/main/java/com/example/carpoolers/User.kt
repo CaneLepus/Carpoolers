@@ -1,6 +1,6 @@
 package com.example.carpoolers
 
-data class User(val first: String, val second: String, val phone: String, val email: String, val password: String, val rating: Double) {
+data class User(val first: String, val second: String, val phone: String, val email: String, val password: String) {
     fun storeFormat(): HashMap<Any, Any>{
         return hashMapOf(
             "first" to first,
@@ -8,7 +8,7 @@ data class User(val first: String, val second: String, val phone: String, val em
             "phone" to phone,
             "email" to email,
             "password" to password,
-            "rating" to rating
+            "rating" to 0
         )
     }
 }
