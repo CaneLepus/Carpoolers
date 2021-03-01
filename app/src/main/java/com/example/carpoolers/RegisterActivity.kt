@@ -1,6 +1,5 @@
 package com.example.carpoolers
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.util.Log
@@ -8,11 +7,9 @@ import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.tasks.await
-import kotlin.properties.Delegates
 
 class RegisterActivity : AppCompatActivity() {
     val db = Firebase.firestore
