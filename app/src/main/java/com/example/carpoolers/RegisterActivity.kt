@@ -10,6 +10,9 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.tasks.await
+import kotlin.properties.Delegates
 
 class RegisterActivity : AppCompatActivity() {
     val db = Firebase.firestore
@@ -35,30 +38,17 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
     private fun click(){
-        if (isEnteredCorrectly()) {
-            val user = User(
-                first.text.toString(), second.text.toString(), phone.text.toString(),
-                email.text.toString(), password.text.toString()
-            )
-            db.collection("users")
-                .add(user.storeFormat())
-                .addOnSuccessListener { documentReference ->
-                    Log.d("Success: ", "DocumentSnapshot added with ID: ${documentReference.id}")
-                }
-                .addOnFailureListener { e ->
-                    Log.w("Error: ", "Error adding document", e)
-                }
-        }
-
+        getDbdata()
+        isEnteredCorrectly()
     }
     fun CharSequence?.isValidEmail() = !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
     fun CharSequence?.isValidPhoneNumber() = !isNullOrEmpty() && this.matches(Regex("^[+]?[0-9]{8,20}$"))
-    fun isEnteredCorrectly(): Boolean{
+    fun isEnteredCorrectly(){
         if (first.text.toString() != "" && second.text.toString() != ""){
             if(email.text.isValidEmail()){
                 if (phone.text.isValidPhoneNumber()){
                     if (password.text.toString() != "" && password.text.toString() == repeat.text.toString()){
-                        return true
+                        getDbdata()
                     }else{
                         val toast = Toast.makeText(this, "Enter the same password in both password fields.", Toast.LENGTH_SHORT)
                         toast.show()
@@ -77,6 +67,32 @@ class RegisterActivity : AppCompatActivity() {
             val toast = Toast.makeText(this, "Enter a valid name", Toast.LENGTH_SHORT)
             toast.show()
         }
-        return false
+    }
+    fun getDbdata(){
+        db.collection("users")
+                .whereEqualTo("email", email.text.toString())
+                .get()
+                .addOnSuccessListener { result ->
+                    if (result.isEmpty){
+                        val user = User(
+                                first.text.toString(), second.text.toString(), phone.text.toString(),
+                                email.text.toString(), password.text.toString()
+                        )
+                        db.collection("users")
+                                .add(user.storeFormat())
+                                .addOnSuccessListener { documentReference ->
+                                    Log.d("Success: ", "DocumentSnapshot added with ID: ${documentReference.id}")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.w("Error: ", "Error adding document", e)
+                                }
+                    }else{
+                        val toast = Toast.makeText(this, "Email already exists", Toast.LENGTH_SHORT)
+                        toast.show()
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("TAG", "Error getting documents.", exception)
+                }
     }
 }
