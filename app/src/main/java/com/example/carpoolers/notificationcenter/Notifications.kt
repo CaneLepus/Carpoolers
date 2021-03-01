@@ -1,17 +1,15 @@
-package com.example.carpoolers
+package com.example.carpoolers.notificationcenter
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.carpoolers.R
 
 class Notifications : AppCompatActivity() {
     private val CHANNEL_ID = "channelOne"
@@ -19,6 +17,7 @@ class Notifications : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notifications)
+        createNotificationChannel(CHANNEL_ID)
         val sendNotificationButton = findViewById<Button>(R.id.notificationButton)
         sendNotificationButton.setOnClickListener {
             sendNotification( "Test",
@@ -42,5 +41,22 @@ class Notifications : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun createNotificationChannel(CHANNEL_ID: String) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "main channel"
+            val descriptionText = "channel used for testing atm"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }
