@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Carpoolers">
         <activity android:name=".notificationcenter.Notifications"></activity>
-
+        <activity android:name=".SwipeFunction.SwipeActivity"/>
+        <activity android:name=".SwipeFunction.TemporaryProfileActivity"/>
         <activity android:name=".LoginActivity"></activity>
 
         <activity android:name=".RegisterActivity" />
