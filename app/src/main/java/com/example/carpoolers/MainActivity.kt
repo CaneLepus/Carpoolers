@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.example.carpoolers.SwipeFunction.SwipeActivity
-import com.example.carpoolers.notificationcenter.FirebaseTokenCollector
-import com.example.carpoolers.notificationcenter.Notifications
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //testing
-        val fbtc: FirebaseTokenCollector = FirebaseTokenCollector()
+        val fbtc: NotificationHandler = NotificationHandler()
         fbtc.getToken()
 
         val button = findViewById<Button>(R.id.loginActivityButton)
@@ -22,11 +20,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
-        val notificationPageButton = findViewById<Button>(R.id.notificationPageButton)
-        notificationPageButton.setOnClickListener {
-            val intent = Intent(this, Notifications::class.java)
-            startActivity(intent)
-        }
+
         val swipeButton = findViewById<Button>(R.id.swipeButton)
         swipeButton.setOnClickListener {
             val intent = Intent(this, SwipeActivity::class.java)

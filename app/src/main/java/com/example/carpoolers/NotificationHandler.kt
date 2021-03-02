@@ -1,19 +1,26 @@
-package com.example.carpoolers.notificationcenter
+package com.example.carpoolers
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.util.Log
-import android.util.Log.VERBOSE
-import android.widget.Toast
-import com.example.carpoolers.R
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.iid.InstanceIdResult
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 
-class FirebaseTokenCollector: FirebaseMessagingService() {
+class NotificationHandler: FirebaseMessagingService() {
+    private val CHANNEL_ID = "channelTwo"
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel(CHANNEL_ID)
+
+    }
     override fun onNewToken(token: String) {
         Log.d("NEW TOKEN", "Refreshed token: $token")
 
@@ -23,6 +30,7 @@ class FirebaseTokenCollector: FirebaseMessagingService() {
         //sendRegistrationToServer(token)
     }
 
+    // för att få tag på token
     fun getToken(){
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
@@ -42,7 +50,6 @@ class FirebaseTokenCollector: FirebaseMessagingService() {
      *
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
-    // [START receive_message]
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // [START_EXCLUDE]
         // There are two types of messages data messages and notification messages. Data messages are handled
@@ -71,8 +78,39 @@ class FirebaseTokenCollector: FirebaseMessagingService() {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-
+        sendNotification("Carpoolers", remoteMessage.notification?.body!!, 666)
 
     }
-    // [END receive_message]
+
+    private fun createNotificationChannel(CHANNEL_ID: String) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "main channel"
+            val descriptionText = "channel used for testing via firebase atm"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun sendNotification( title: String, text: String, notificationId: Int) {
+        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle(title)
+                .setStyle(NotificationCompat.BigTextStyle()
+                        .bigText(text))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(this)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(notificationId, builder.build())
+        }
+    }
 }

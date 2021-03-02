@@ -11,7 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Carpoolers">
-        <activity android:name=".notificationcenter.Notifications"></activity>
         <activity android:name=".SwipeFunction.SwipeActivity"/>
         <activity android:name=".SwipeFunction.TemporaryProfileActivity"/>
         <activity android:name=".LoginActivity"></activity>
@@ -26,7 +25,7 @@
         </activity>
 
         <service
-            android:name=".notificationcenter.FirebaseTokenCollector"
+            android:name=".NotificationHandler"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
