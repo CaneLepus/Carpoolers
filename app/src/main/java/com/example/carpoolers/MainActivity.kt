@@ -16,9 +16,9 @@ class MainActivity : AppCompatActivity() {
         val fbtc: FirebaseTokenCollector = FirebaseTokenCollector()
         fbtc.getToken()
 
-        val button = findViewById<Button>(R.id.registerActivityButton)
+        val button = findViewById<Button>(R.id.loginActivityButton)
         button.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
         val notificationPageButton = findViewById<Button>(R.id.notificationPageButton)
