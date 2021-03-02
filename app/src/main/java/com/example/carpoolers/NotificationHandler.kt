@@ -12,13 +12,15 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
-
+/**
+ * Composed by Shmonn<3
+ */
 class NotificationHandler: FirebaseMessagingService() {
-    private val CHANNEL_ID = "channelTwo"
+    private val channelID = "channelMAIN"
 
     override fun onCreate() {
         super.onCreate()
-        createNotificationChannel(CHANNEL_ID)
+        createNotificationChannel(channelID)
 
     }
     override fun onNewToken(token: String) {
@@ -27,10 +29,15 @@ class NotificationHandler: FirebaseMessagingService() {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // FCM registration token to your app server.
-        //sendRegistrationToServer(token)
+        sendRegistrationToServer(token)
+
     }
 
-    // för att få tag på token
+    private fun sendRegistrationToServer(token: String) {
+        //TODO: create method
+    }
+
+    // to get the token
     fun getToken(){
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
@@ -45,11 +52,6 @@ class NotificationHandler: FirebaseMessagingService() {
         })
     }
 
-    /**
-     * Called when message is received.
-     *
-     * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
-     */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // [START_EXCLUDE]
         // There are two types of messages data messages and notification messages. Data messages are handled
@@ -78,7 +80,7 @@ class NotificationHandler: FirebaseMessagingService() {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        sendNotification("Carpoolers", remoteMessage.notification?.body!!, 666)
+        sendLocalNotification(remoteMessage.notification?.body!!, 666)
 
     }
 
@@ -99,18 +101,24 @@ class NotificationHandler: FirebaseMessagingService() {
         }
     }
 
-    private fun sendNotification( title: String, text: String, notificationId: Int) {
-        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle(title)
+    private fun sendLocalNotification(text: String, notificationId: Int) {
+        // send notification
+        // id should always be unique
+        var builder = NotificationCompat.Builder(this, channelID)
+                .setSmallIcon(R.drawable.notifications_icon)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setStyle(NotificationCompat.BigTextStyle()
                         .bigText(text))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)) {
             // notificationId is a unique int for each notification that you must define
             notify(notificationId, builder.build())
         }
+    }
+
+    private fun sendCloudNotification(){
+        var postUrl = "fcm.googleapis.com/fcm/send"
+        
     }
 }
