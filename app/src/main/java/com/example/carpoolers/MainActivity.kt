@@ -1,6 +1,7 @@
 package com.example.carpoolers
 
 import android.content.Intent
+import android.media.Rating
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -24,6 +25,12 @@ class MainActivity : AppCompatActivity() {
         val swipeButton = findViewById<Button>(R.id.swipeButton)
         swipeButton.setOnClickListener {
             val intent = Intent(this, SwipeActivity::class.java)
+            startActivity(intent)
+        }
+
+        val ratingButton = findViewById<Button>(R.id.ratingButton)
+        ratingButton.setOnClickListener{
+            val intent = Intent(this, RatingActivity::class.java)
             startActivity(intent)
         }
     }
