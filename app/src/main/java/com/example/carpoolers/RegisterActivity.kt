@@ -60,10 +60,12 @@ class RegisterActivity : AppCompatActivity() {
         if (first.text.toString() != "" && second.text.toString() != ""){
                 if (phone.text.isValidPhoneNumber()){
                     if (getCoordinates()) {
+                        var token = n.getToken() //debug
+                        Thread.sleep(1000) //debug
                         var user = auth.currentUser
                         val collection = db.collection("users")
                         val userInfo = User(first.text.toString(), second.text.toString(), phone.text.toString(), lat, long, bio.text.toString(), ArrayList()
-                        , n.getToken())
+                        , token)
                         Log.d("TAG", "User id: ${user.uid}")
                         collection.document(user.uid).set(userInfo.storeFormat())
                                 .addOnSuccessListener {
