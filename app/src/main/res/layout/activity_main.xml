@@ -25,10 +25,10 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/notificationPageButton"
+        android:id="@+id/ratingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="UNUSED"
+        android:text="Rating bar TEST"
         app:layout_constraintBottom_toTopOf="@+id/loginActivityButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Swipe"
-        app:layout_constraintBottom_toTopOf="@+id/notificationPageButton"
+        app:layout_constraintBottom_toTopOf="@+id/ratingButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

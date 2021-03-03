@@ -15,6 +15,7 @@
         <activity android:name=".SwipeFunction.SwipeActivity"/>
         <activity android:name=".SwipeFunction.TemporaryProfileActivity"/>
         <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".RatingActivity"></activity>
 
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity">
