@@ -34,7 +34,7 @@ class RegisterActivity : AppCompatActivity() {
     private val pickImage = 100;
     var lat by Delegates.notNull<Double>()
     var long by Delegates.notNull<Double>()
-    val n = NotificationHandler()
+    private val n = NotificationHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +63,7 @@ class RegisterActivity : AppCompatActivity() {
                         var user = auth.currentUser
                         val collection = db.collection("users")
                         val userInfo = User(first.text.toString(), second.text.toString(), phone.text.toString(), lat, long, bio.text.toString(), ArrayList()
-                        , n.getToken().toString())
+                        , n.getToken())
                         Log.d("TAG", "User id: ${user.uid}")
                         collection.document(user.uid).set(userInfo.storeFormat())
                                 .addOnSuccessListener {
