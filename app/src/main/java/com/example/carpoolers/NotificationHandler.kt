@@ -39,7 +39,8 @@ class NotificationHandler: FirebaseMessagingService() {
 
     // to get the token
     fun getToken(): String {
-        var token: String? = "empty"
+        var token: String? = "whythisdoesntwork"
+
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("NEW TOKEN FAILED", "Fetching FCM registration token failed", task.exception)
@@ -52,7 +53,7 @@ class NotificationHandler: FirebaseMessagingService() {
             Log.d("CURRENT TOKEN", "$token")
         })
 
-        token = FirebaseMessaging.getInstance().token.result
+        //token = FirebaseMessaging.getInstance().token.result
         return "$token"
     }
 
