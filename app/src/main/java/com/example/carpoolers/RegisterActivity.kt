@@ -119,12 +119,33 @@ class RegisterActivity : AppCompatActivity() {
         auth.currentUser.updateProfile(changeRequest.build())
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
+                        initiateUser()
                         Log.d("TAG", "User picture added")
-                        val intent = Intent(this, SwipeActivity::class.java)
-                        startActivity(intent)
                     }
 
                 }
+    }
+    fun initiateUser(){
+        val users = db.collection("users")
+        val query = users.document(auth.currentUser.uid)
+        val snapshot = query.get()
+        Thread.sleep(1000)
+
+        if (snapshot.result?.exists() == true){
+            val first = snapshot.result?.get("first")
+            val second = snapshot.result?.get("last")
+            val phone = snapshot.result?.get("phone")
+            val lat = snapshot.result?.get("latitude")
+            val long = snapshot.result?.get("longitude")
+            val bio = snapshot.result?.get("biography")
+            Singleton.user = User(first as String, second as String, phone as String, lat as Double, long as Double, bio as String)
+            Log.d("TAG", Singleton.user.storeFormat().toString())
+            val intent = Intent(this, SwipeActivity::class.java)
+            startActivity(intent)
+        }else{
+            val intent = Intent(applicationContext, RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 }
