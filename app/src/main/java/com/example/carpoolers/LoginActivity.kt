@@ -12,9 +12,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlin.concurrent.thread
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    val db = Firebase.firestore
     private lateinit var email: EditText
     private lateinit var password: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,10 +57,9 @@ class LoginActivity : AppCompatActivity() {
                     auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
+                                initiateUser()
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TAG", "signInWithEmail:success")
-                                val intent = Intent(this, SwipeActivity::class.java)
-                                startActivity(intent)
 
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -73,5 +74,27 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+    fun initiateUser(){
+        val users = db.collection("users")
+        val query = users.document(auth.currentUser.uid)
+        val snapshot = query.get()
+        Thread.sleep(1000)
+
+        if (snapshot.result?.exists() == true){
+            val first = snapshot.result?.get("first")
+            val second = snapshot.result?.get("last")
+            val phone = snapshot.result?.get("phone")
+            val lat = snapshot.result?.get("latitude")
+            val long = snapshot.result?.get("longitude")
+            val bio = snapshot.result?.get("biography")
+            Singleton.user = User(first as String, second as String, phone as String, lat as Double, long as Double, bio as String)
+            Log.d("TAG", Singleton.user.storeFormat().toString())
+            val intent = Intent(this, SwipeActivity::class.java)
+            startActivity(intent)
+        }else{
+            val intent = Intent(applicationContext, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+    }
     }
 
