@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -39,22 +40,24 @@ class NotificationHandler: FirebaseMessagingService() {
 
     // to get the token
     fun getToken(): String {
-        //var token: String? = "whythisdoesntwork"
-
+        var returnToken = "this is a return token"
         val snapshot = FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("NEW TOKEN FAILED", "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
-
             // Get new FCM registration token
             val token = task.result
 
             Log.d("CURRENT TOKEN", "$token")
         })
+        Thread.sleep(2000)
+        if(snapshot.isComplete){
+            returnToken = "${snapshot.result}"
+        }
 
-        Thread.sleep(1000)
-        return "${snapshot.result}"
+        return returnToken
+
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {

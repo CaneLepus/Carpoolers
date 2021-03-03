@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.carpoolers.SwipeFunction.SwipeActivity
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -19,6 +20,7 @@ import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.lang.Exception
+import java.lang.reflect.Array
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
@@ -129,7 +131,7 @@ class RegisterActivity : AppCompatActivity() {
         val users = db.collection("users")
         val query = users.document(auth.currentUser.uid)
         val snapshot = query.get()
-        Thread.sleep(1000)
+        Thread.sleep(2000)
 
         if (snapshot.result?.exists() == true){
             val first = snapshot.result?.get("first")
@@ -138,7 +140,10 @@ class RegisterActivity : AppCompatActivity() {
             val lat = snapshot.result?.get("latitude")
             val long = snapshot.result?.get("longitude")
             val bio = snapshot.result?.get("biography")
-            Singleton.user = User(first as String, second as String, phone as String, lat as Double, long as Double, bio as String)
+            val ratings = snapshot.result?.get("rating")
+            val fcmKey = snapshot.result?.get("fcmKey")
+            Singleton.user = User(first as String, second as String, phone as String,
+                    lat as Double, long as Double, bio as String, ratings as ArrayList<Double>, fcmKey as String)
             Log.d("TAG", Singleton.user.storeFormat().toString())
             val intent = Intent(this, SwipeActivity::class.java)
             startActivity(intent)
