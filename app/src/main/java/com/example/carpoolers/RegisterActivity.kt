@@ -20,6 +20,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.lang.Exception
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class RegisterActivity : AppCompatActivity() {
@@ -60,7 +61,8 @@ class RegisterActivity : AppCompatActivity() {
                     if (getCoordinates()) {
                         var user = auth.currentUser
                         val collection = db.collection("users")
-                        val userInfo = User(first.text.toString(), second.text.toString(), phone.text.toString(), lat, long, bio.text.toString())
+                        val userInfo = User(first.text.toString(), second.text.toString(), phone.text.toString(), lat, long, bio.text.toString(), ArrayList()
+                        )
                         Log.d("TAG", "User id: ${user.uid}")
                         collection.document(user.uid).set(userInfo.storeFormat())
                                 .addOnSuccessListener {
