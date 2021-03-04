@@ -16,7 +16,7 @@
     </androidx.viewpager.widget.ViewPager>
 
     <Button
-        android:id="@+id/btnOrder"
+        android:id="@+id/chatButton"
         android:text="chat"
         android:textColor="#fff"
         android:background="@drawable/round"

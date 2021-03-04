@@ -12,8 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Carpoolers"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".ChatFunction.PreviousChatsActivity" />
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
+        <activity android:name=".ChatFunction.PreviousChatsActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".ChatFunction.ChatLogActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ChatFunction.PreviousChatsActivity" />
+        </activity>
         <activity android:name=".ProfilePage" />
         <activity android:name=".SwipeFunction.SwipeActivity" />
         <activity android:name=".SwipeFunction.TemporaryProfileActivity" />

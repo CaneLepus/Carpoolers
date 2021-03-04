@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.animation.ArgbEvaluator;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
+import com.example.carpoolers.ChatFunction.ChatLogActivity;
 import com.example.carpoolers.R;
 
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ public class SwipeActivity extends AppCompatActivity {
 
     ViewPager viewPager;
     Adapter adapter;
+    Button button;
     List<Model> models;
     Integer[] colors = null;
     ArgbEvaluator argbEvaluator = new ArgbEvaluator();
@@ -36,14 +40,18 @@ public class SwipeActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         viewPager.setPadding(130, 0, 130, 0);
 
-        Integer[] colors_temp = {
+        button = findViewById(R.id.chatButton);
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ChatLogActivity.class);
+            startActivity(intent);
+        });
+
+        colors = new Integer[]{
                 getResources().getColor(R.color.color1),
                 getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color3),
                 getResources().getColor(R.color.color4)
         };
-
-        colors = colors_temp;
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
