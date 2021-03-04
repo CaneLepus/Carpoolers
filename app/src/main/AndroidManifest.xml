@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Carpoolers"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ProfilePage"></activity>
+        <activity android:name=".ChatFunction.PreviousChatsActivity" />
+        <activity android:name=".ProfilePage" />
         <activity android:name=".SwipeFunction.SwipeActivity" />
         <activity android:name=".SwipeFunction.TemporaryProfileActivity" />
         <activity android:name=".LoginActivity" />

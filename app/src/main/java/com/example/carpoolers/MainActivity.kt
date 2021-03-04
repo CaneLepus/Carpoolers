@@ -5,6 +5,7 @@ import android.media.Rating
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.carpoolers.ChatFunction.PreviousChatsActivity
 import com.example.carpoolers.SwipeFunction.SwipeActivity
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +28,12 @@ class MainActivity : AppCompatActivity() {
         val ratingButton = findViewById<Button>(R.id.ratingButton)
         ratingButton.setOnClickListener{
             val intent = Intent(this, RatingActivity::class.java)
+            startActivity(intent)
+        }
+
+        val messagesButton = findViewById<Button>(R.id.messagesButton)
+        messagesButton.setOnClickListener {
+            val intent = Intent(this, PreviousChatsActivity::class.java)
             startActivity(intent)
         }
     }
