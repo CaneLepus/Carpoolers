@@ -26,12 +26,6 @@ class NotificationHandler: FirebaseMessagingService() {
     }
     override fun onNewToken(token: String) {
         Log.d("NEW TOKEN", "Refreshed token: $token")
-        sendRegistrationToServer(token)
-
-    }
-
-    private fun sendRegistrationToServer(token: String) {
-        //TODO: create method
     }
 
     // to get the token
@@ -94,9 +88,9 @@ class NotificationHandler: FirebaseMessagingService() {
         }
     }
 
-    private fun sendLocalNotification(text: String, notificationId: Int) {
+    fun sendLocalNotification(text: String, notificationId: Int) {
         // send notification
-        // id should always be unique
+        // Notification ID should always be unique
         var builder = NotificationCompat.Builder(this, channelID)
                 .setSmallIcon(R.drawable.notifications_icon)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -108,10 +102,5 @@ class NotificationHandler: FirebaseMessagingService() {
             // notificationId is a unique int for each notification that you must define
             notify(notificationId, builder.build())
         }
-    }
-
-    private fun sendCloudNotification(){
-        var postUrl = "fcm.googleapis.com/fcm/send"
-        
     }
 }
