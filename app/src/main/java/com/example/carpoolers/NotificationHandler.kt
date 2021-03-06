@@ -36,7 +36,7 @@ class NotificationHandler: FirebaseMessagingService() {
 
     // to get the token
     fun getToken(): String {
-        var returnToken = "this is a return token"
+        var returnToken = "fcm key not implemented"
         val snapshot = FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("NEW TOKEN FAILED", "Fetching FCM registration token failed", task.exception)
