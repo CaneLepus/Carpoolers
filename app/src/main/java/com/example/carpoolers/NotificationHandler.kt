@@ -8,13 +8,14 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 /**
- * Composed by Shmonn<3
+ * This class handles notifications coming from firebase and allows other methods to send
+ * notifications by simply calling the sendLocalNotification()-method
+ * @author Shmonn<3
  */
 class NotificationHandler: FirebaseMessagingService() {
     private val channelID = "channelMAIN"
@@ -28,7 +29,9 @@ class NotificationHandler: FirebaseMessagingService() {
         Log.d("NEW TOKEN", "Refreshed token: $token")
     }
 
-    // to get the token
+    /**
+     * Do not use this method
+     */
     fun getToken(): String {
         var returnToken = "fcm key not implemented"
         val snapshot = FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -67,7 +70,7 @@ class NotificationHandler: FirebaseMessagingService() {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        sendLocalNotification(remoteMessage.notification?.body!!, 666)
+        sendNotification(remoteMessage.notification?.body!!, 666)
 
     }
 
@@ -88,7 +91,13 @@ class NotificationHandler: FirebaseMessagingService() {
         }
     }
 
-    fun sendLocalNotification(text: String, notificationId: Int) {
+    /**
+     * Method used to send local notifications by the app
+     * @author Shmonn<3
+     * @param text String with text to be displayed within the notification
+     * @param notificationId Int with unique value for different notifications
+     */
+    fun sendNotification(text: String, notificationId: Int) {
         // send notification
         // Notification ID should always be unique
         var builder = NotificationCompat.Builder(this, channelID)

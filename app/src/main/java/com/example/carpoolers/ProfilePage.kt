@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.carpoolers.SwipeFunction.SwipeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -22,7 +23,8 @@ import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 /**
- * Composed by Shmonn<3
+ * @author Shmonn<3
+ * This class handles the profile page where you can change information, profile picture etc.
  */
 class ProfilePage : AppCompatActivity() {
     private lateinit var profilePic: ImageView
@@ -37,6 +39,7 @@ class ProfilePage : AppCompatActivity() {
     private lateinit var lastName: String
     private lateinit var biography: String
     private lateinit var addressString: String
+    private lateinit var deleteButton: Button
     private lateinit var checkBox: CheckBox
     private val pickImage = 100;
     private lateinit var phoneNumber: String
@@ -70,6 +73,16 @@ class ProfilePage : AppCompatActivity() {
         }
         address = findViewById(R.id.addressInput)
         checkBox = findViewById(R.id.checkBox)
+        deleteButton = findViewById(R.id.deleteButton)
+        deleteButton.setOnClickListener {
+            auth.currentUser.delete().addOnSuccessListener {
+                Toast.makeText(this, "Account deleted", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }.addOnFailureListener{
+                Toast.makeText(this, "Account deletion failed", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         checkPermission()
         initProfile()
@@ -204,6 +217,7 @@ class ProfilePage : AppCompatActivity() {
             Thread.sleep(3000)
             initProfile()
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -216,7 +230,7 @@ class ProfilePage : AppCompatActivity() {
         }
     }
 
-    fun updateInfo(imageUri: Uri){
+    private fun updateInfo(imageUri: Uri){
         val changeRequest = UserProfileChangeRequest.Builder()
             .setPhotoUri(imageUri)
         auth.currentUser.updateProfile(changeRequest.build())
