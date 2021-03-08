@@ -1,9 +1,13 @@
 package com.example.carpoolers
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -146,11 +150,13 @@ class ProfilePage : AppCompatActivity() {
     }
 
     private fun update() {
+        var profile = false
+        var pass = false
+
         if (first.text.toString() != firstName || last.text.toString() != lastName
             || phone.text.toString() != phoneNumber || bio.text.toString() != biography
             || emailInputWindow.text.toString() != email
-            || address.text.toString() != addressString || passWordField.text.isNullOrEmpty()
-        ) {
+            || address.text.toString() != addressString) {
 
             val changeRequest = UserProfileChangeRequest.Builder()
                 .setDisplayName(first.text.toString() + " " + last.text.toString())
@@ -167,15 +173,63 @@ class ProfilePage : AppCompatActivity() {
             query.set(userInfo.storeFormat())
 
             auth.currentUser.updateEmail(email)
-            if (!passWordField.text.isNullOrEmpty()){
-                auth.currentUser.updatePassword(passWordField.text.toString())
-            }
 
-            Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Nothing to update", Toast.LENGTH_SHORT).show()
+            profile = true
         }
 
-        initProfile()
+        if(!passWordField.text.isNullOrEmpty()){
+            auth.currentUser.updatePassword(passWordField.text.toString())
+            pass = true
+        }
+
+        if(checkBox.isChecked){
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, pickImage)
+        }
+
+        if(profile && !pass){
+            Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show()
+            Thread.sleep(3000)
+            initProfile()
+        } else if(profile && pass){
+            Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show()
+            Thread.sleep(3000)
+            initProfile()
+        } else if (!profile && pass){
+            Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show()
+            Thread.sleep(3000)
+            initProfile()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage){
+            val imageUri = data?.data
+            if (imageUri != null) {
+                updateInfo(imageUri)
+            }
+        }
+    }
+
+    fun updateInfo(imageUri: Uri){
+        val changeRequest = UserProfileChangeRequest.Builder()
+            .setPhotoUri(imageUri)
+        auth.currentUser.updateProfile(changeRequest.build())
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful){
+                    Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Picture updated", Toast.LENGTH_SHORT).show()
+                    Thread.sleep(3000)
+                    initProfile()
+                } else if(task.isCanceled){
+                    Toast.makeText(this, "Picture update failed/cancelled", Toast.LENGTH_LONG).show()
+                    initProfile()
+                }
+            }
     }
 }
