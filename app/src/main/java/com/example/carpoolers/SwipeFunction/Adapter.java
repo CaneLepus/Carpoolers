@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,14 +46,17 @@ public class Adapter extends PagerAdapter {
 
         ImageView imageView;
         TextView title, desc;
+        RatingBar ratingBar;
 
         imageView = view.findViewById(R.id.image);
         title = view.findViewById(R.id.title);
         desc = view.findViewById(R.id.desc);
+        ratingBar = view.findViewById(R.id.ratingBar);
 
         imageView.setImageResource(models.get(position).getImage());
         title.setText(models.get(position).getTitle());
         desc.setText(models.get(position).getDesc());
+        ratingBar.setRating(models.get(position).getRating());
 
         view.setOnClickListener(v -> {
             Intent intent = new Intent(context, TemporaryProfileActivity.class);
