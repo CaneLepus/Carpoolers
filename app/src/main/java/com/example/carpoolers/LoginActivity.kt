@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
                     auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
-                                val intent = Intent(this, ProfilePage::class.java)
+                                val intent = Intent(this, MainMenuActivity::class.java)
                                 startActivity(intent)
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TAG", "signInWithEmail:success")
