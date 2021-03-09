@@ -61,6 +61,8 @@ public class Adapter extends PagerAdapter {
         view.setOnClickListener(v -> {
             Intent intent = new Intent(context, TemporaryProfileActivity.class);
             intent.putExtra("param", models.get(position).getTitle());
+            intent.putExtra("rating", models.get(position).getRating());
+            intent.putExtra("uid", models.get(position).getUid());
             context.startActivity(intent);
             //finish();
         });

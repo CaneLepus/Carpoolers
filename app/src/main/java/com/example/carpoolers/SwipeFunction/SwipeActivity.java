@@ -52,6 +52,7 @@ public class SwipeActivity extends AppCompatActivity {
                     models = new ArrayList<>();
 
                     for (DocumentSnapshot document : documentSnapshot) {
+                        String uid = document.getId();
                         firstName = (String) document.get("first");
                         lastName = document.get("last").toString();
                         bio = document.get("biography").toString();
@@ -65,7 +66,7 @@ public class SwipeActivity extends AppCompatActivity {
                         }
                         rating /= ratings.size();
 
-                        models.add(new Model(R.drawable.ic_profilepic, firstName + " " + lastName, "" + bio, rating));
+                        models.add(new Model(R.drawable.ic_profilepic,uid ,  firstName + " " + lastName, "" + bio, rating));
                     }
 
 

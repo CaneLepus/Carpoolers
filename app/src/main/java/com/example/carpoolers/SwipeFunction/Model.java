@@ -5,12 +5,14 @@ public class Model {
     private String title;
     private String desc;
     private Float rating;
+    private String uid;
 
-    public Model(int image, String title, String desc, Float rating) {
+    public Model(int image, String uid, String title, String desc, Float rating) {
         this.image = image;
         this.title = title;
         this.desc = desc;
         this.rating = rating;
+        this.uid = uid;
     }
 
     public int getImage() {
@@ -38,4 +40,6 @@ public class Model {
     }
 
     public float getRating(){return rating;}
+
+    public String getUid(){return uid;}
 }

@@ -32,8 +32,6 @@ public class TemporaryProfileActivity extends AppCompatActivity {
                 rate(rating);
                 ratingBar.setIsIndicator(true);
 
-                ratingBar.setRating(ra.getRating(getApplicationContext(), getIntent().getStringExtra("uid")));
-
                 //ratings = String.valueOf(rating);
 
             }

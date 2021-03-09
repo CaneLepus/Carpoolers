@@ -17,4 +17,11 @@ data class User(val first: String, val second: String, val phone: String, val la
             "fcmKey" to fcmKey
         )
     }
+
+    fun addRating(rating : Double): HashMap<Any, Any>{
+
+        return hashMapOf(
+            "rating" to rating
+        )
+    }
 }
