@@ -32,11 +32,6 @@ class Rate : AppCompatActivity() {
                 .set(data, SetOptions.merge())
 
             Toast.makeText(
-                context, arrList.toString(),
-                Toast.LENGTH_SHORT
-            ).show()
-
-            Toast.makeText(
                 context, "Rating given, thank you! Rating: $rating",
                 Toast.LENGTH_SHORT
             ).show()
