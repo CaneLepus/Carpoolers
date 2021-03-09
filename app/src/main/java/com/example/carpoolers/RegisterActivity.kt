@@ -69,6 +69,7 @@ class RegisterActivity : AppCompatActivity() {
                         collection.document(user.uid).set(userInfo.storeFormat())
                                 .addOnSuccessListener {
                                     Log.d("TAG", "DocumentSnapshot successfully written!")
+                                    Singleton.notifications.sendNotification("Account created, welcome to Carpoolers!", 667, this)
                                     val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
                                     startActivityForResult(gallery, pickImage)
                                 }

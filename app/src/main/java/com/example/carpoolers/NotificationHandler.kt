@@ -23,14 +23,15 @@ class NotificationHandler: FirebaseMessagingService() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel(channelID)
-
+        sendNotification("inside method", 667)
     }
+
     override fun onNewToken(token: String) {
         Log.d("NEW TOKEN", "Refreshed token: $token")
     }
 
     /**
-     * Do not use this method
+     * Mainly for debugging
      */
     fun getToken(): String {
         var returnToken = "fcm key not implemented"
@@ -74,7 +75,7 @@ class NotificationHandler: FirebaseMessagingService() {
 
     }
 
-    private fun createNotificationChannel(CHANNEL_ID: String) {
+     private fun createNotificationChannel(CHANNEL_ID: String) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -91,13 +92,7 @@ class NotificationHandler: FirebaseMessagingService() {
         }
     }
 
-    /**
-     * Method used to send local notifications by the app
-     * @author Shmonn<3
-     * @param text String with text to be displayed within the notification
-     * @param notificationId Int with unique value for different notifications
-     */
-    fun sendNotification(text: String, notificationId: Int) {
+    private fun sendNotification(text: String, notificationId: Int) {
         // send notification
         // Notification ID should always be unique
         var builder = NotificationCompat.Builder(this, channelID)
@@ -108,6 +103,29 @@ class NotificationHandler: FirebaseMessagingService() {
                 .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(notificationId, builder.build())
+        }
+    }
+
+    /**
+     * Method used to send local notifications by the app
+     * @author Shmonn<3
+     * @param text String with text to be displayed within the notification
+     * @param notificationId Int with unique value for different notifications
+     * @param context write 'this'
+     */
+    fun sendNotification(text: String, notificationId: Int, context: Context) {
+        // send notification
+        // Notification ID should always be unique
+        var builder = NotificationCompat.Builder(context, channelID)
+            .setSmallIcon(R.drawable.notifications_icon)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText(text))
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(context)) {
             // notificationId is a unique int for each notification that you must define
             notify(notificationId, builder.build())
         }
