@@ -1,6 +1,8 @@
 package com.example.carpoolers
 
+import android.app.ProgressDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
@@ -17,6 +19,7 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
@@ -64,7 +67,7 @@ class RegisterActivity : AppCompatActivity() {
                         var user = auth.currentUser
                         val collection = db.collection("users")
                         val userInfo = User(first.text.toString(), second.text.toString(), phone.text.toString(), lat, long, bio.text.toString(), ArrayList()
-                        , token)
+                        , token, "")
                         Log.d("TAG", "User id: ${user.uid}")
                         collection.document(user.uid).set(userInfo.storeFormat())
                                 .addOnSuccessListener {
@@ -96,6 +99,34 @@ class RegisterActivity : AppCompatActivity() {
             val imageUri = data?.data
             if (imageUri != null) {
                 updateInfo(imageUri)
+
+                var pd = ProgressDialog(this)
+                pd.setTitle("Uploading")
+                pd.show()
+
+                var filepath : Uri = data.data!!
+                var bitmap : Bitmap = MediaStore.Images.Media.getBitmap(contentResolver,filepath)
+
+                var imageRef = FirebaseStorage.getInstance().reference.child("images/" + auth.currentUser.uid + ".jpg")
+                imageRef.putFile(filepath)
+                    .addOnSuccessListener {p0 ->
+                        pd.dismiss()
+                        Toast.makeText(this, "Image Uploaded!", Toast.LENGTH_LONG).show()
+                    }
+                    .addOnFailureListener{p0 ->
+                        pd.dismiss()
+                        Toast.makeText(this, "Image NOT Uploaded!", Toast.LENGTH_LONG).show()
+
+                    }
+                    .addOnProgressListener {p0 ->
+
+                        var progress = (100.0 * p0.bytesTransferred) / p0.totalByteCount
+                        pd.setMessage("uploaded ${progress.toInt()}%")
+
+                    }
+
+
+
             }
         }
     }
@@ -141,7 +172,7 @@ class RegisterActivity : AppCompatActivity() {
             val ratings = snapshot.result?.get("rating")
             val fcmKey = snapshot.result?.get("fcmKey")
             Singleton.user = User(first as String, second as String, phone as String,
-                    lat as Double, long as Double, bio as String, ratings as ArrayList<Double>, fcmKey as String)
+                    lat as Double, long as Double, bio as String, ratings as ArrayList<Double>, fcmKey as String, "images/ "+auth.currentUser.uid)
             Log.d("TAG", Singleton.user.storeFormat().toString())
             val intent = Intent(this, SwipeActivity::class.java)
             startActivity(intent)

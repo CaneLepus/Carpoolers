@@ -3,12 +3,15 @@ package com.example.carpoolers
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,6 +21,12 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FileDownloadTask
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.android.synthetic.main.chat_left_row.*
+import java.io.File
+import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
@@ -52,6 +61,7 @@ class ProfilePage : AppCompatActivity() {
     private lateinit var ratings: String // not implemented
     private var auth: FirebaseAuth = Firebase.auth
     private val db = Firebase.firestore
+    private val storage = FirebaseStorage.getInstance()
     private val users = db.collection("users")
     private val query = users.document(auth.currentUser.uid)
 
@@ -88,6 +98,7 @@ class ProfilePage : AppCompatActivity() {
 
         checkPermission()
         initProfile()
+        test()
     }
 
     private fun initProfile() {
@@ -100,7 +111,7 @@ class ProfilePage : AppCompatActivity() {
             lat = document.getDouble("latitude")!!
             long = document.getDouble("longitude")!!
             address.text = geocoder.getFromLocation(lat, long, 1)[0].getAddressLine(0)
-            profilePic.setImageURI(auth.currentUser.photoUrl)
+            //profilePic.setImageURI(auth.currentUser.photoUrl)
             displayName.text = auth.currentUser.displayName
             passWordField.hint = "Update password"
 
@@ -155,7 +166,7 @@ class ProfilePage : AppCompatActivity() {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     //Peform your task here if any
-                    profilePic.setImageURI(auth.currentUser.photoUrl)
+                    //profilePic.setImageURI(auth.currentUser.photoUrl)
                 } else {
                     checkPermission()
                 }
@@ -163,6 +174,37 @@ class ProfilePage : AppCompatActivity() {
             }
         }
     }
+
+    private fun test(){
+        // Points to the root reference
+        var path : String = ""
+
+        if (auth.currentUser != null){
+            path = "images/" + auth.currentUser.uid + ".jpg"
+        }
+        Toast.makeText(this, path, Toast.LENGTH_LONG).show()
+
+        val storageReference : StorageReference = FirebaseStorage.getInstance().reference.child(path)
+
+        try {
+            var file : File = File.createTempFile("test", "jpg")
+            storageReference.getFile(file)
+                .addOnSuccessListener {
+
+                    var bitmap : Bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                    profilePic.setImageBitmap(bitmap)
+
+                    Log.i("MAGMA V3 DEBUG>>>>", "IMAGE SHOULD BE DISPLAYED")
+
+
+
+                }
+        }catch (e : IOException){
+            Log.i("MAGMA V3 DEBUG>>>>", "IT FAILED SOMEHOW")
+        }
+    }
+
+
 
     private fun update() {
         var profile = false
@@ -184,7 +226,7 @@ class ProfilePage : AppCompatActivity() {
             val userInfo = User(first.text.toString(), last.text.toString()
                 , phone.text.toString()
                 , lat, long, bio.text.toString(), ArrayList()
-                , "token")
+                , "token", "")
             query.set(userInfo.storeFormat())
 
             auth.currentUser.updateEmail(email)
