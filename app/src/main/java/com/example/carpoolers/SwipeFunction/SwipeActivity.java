@@ -34,37 +34,67 @@ public class SwipeActivity extends AppCompatActivity {
     private String firstName;
     private String lastName;
     private String bio;
-    private ImageView profilePic;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference users = db.collection("users");
     DocumentReference query = users.document(auth.getCurrentUser().getUid());
-    Task<DocumentSnapshot> snapshot = query.get();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
 
-        query.get().addOnSuccessListener(documentSnapshot -> {
-            firstName = (String) snapshot.getResult().get("first");
-            lastName =  snapshot.getResult().get("last").toString();
-            bio = snapshot.getResult().get("biography").toString();
+        users.get().addOnSuccessListener(documentSnapshot -> {
+                    models = new ArrayList<>();
+
+                    for (DocumentSnapshot document : documentSnapshot) {
+                        firstName = (String) document.get("first");
+                        lastName = document.get("last").toString();
+                        bio = document.get("biography").toString();
+
+                        models.add(new Model(R.drawable.ic_profilepic, firstName + " " + lastName, "" + bio));
+                    }
+
+
+                    adapter = new Adapter(models, this);
+
+                    viewPager = findViewById(R.id.viewPagern);
+                    viewPager.setAdapter(adapter);
+                    viewPager.setPadding(130, 0, 130, 0);
+
+
+                    viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                            if (position < (adapter.getCount() - 1) && position < (colors.length - 1)) {
+                                viewPager.setBackgroundColor(
+
+                                        (Integer) argbEvaluator.evaluate(
+                                                positionOffset,
+                                                colors[position],
+                                                colors[position + 1]
+                                        )
+                                );
+                            } else {
+                                viewPager.setBackgroundColor(colors[colors.length - 1]);
+                            }
+                        }
+
+                        @Override
+                        public void onPageSelected(int position) {
+
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int state) {
+
+                        }
+                    });
                 }
-                );
-
-        models = new ArrayList<>();
-        models.add(new Model(R.drawable.ic_profilepic, firstName + " " + lastName, "" + bio));
-        models.add(new Model(R.drawable.ic_profilepic, "David Hejsson", "Rating: "));
-        models.add(new Model(R.drawable.ic_profilepic, "David Coolsson", "Rating: "));
-        models.add(new Model(R.drawable.ic_profilepic, "David Bästsson", "Rating: "));
-
-        adapter = new Adapter(models, this);
-
-        viewPager = findViewById(R.id.viewPagern);
-        viewPager.setAdapter(adapter);
-        viewPager.setPadding(130, 0, 130, 0);
+        );
 
         button = findViewById(R.id.chatButton);
         button.setOnClickListener(v -> {
@@ -76,36 +106,20 @@ public class SwipeActivity extends AppCompatActivity {
                 getResources().getColor(R.color.color1),
                 getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color3),
+                getResources().getColor(R.color.color4),
+                getResources().getColor(R.color.color1),
+                getResources().getColor(R.color.color2),
+                getResources().getColor(R.color.color3),
+                getResources().getColor(R.color.color4),
+                getResources().getColor(R.color.color1),
+                getResources().getColor(R.color.color2),
+                getResources().getColor(R.color.color3),
+                getResources().getColor(R.color.color4),
+                getResources().getColor(R.color.color1),
+                getResources().getColor(R.color.color2),
+                getResources().getColor(R.color.color3),
                 getResources().getColor(R.color.color4)
         };
 
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                if (position < (adapter.getCount() - 1) && position < (colors.length - 1)) {
-                    viewPager.setBackgroundColor(
-
-                            (Integer) argbEvaluator.evaluate(
-                                    positionOffset,
-                                    colors[position],
-                                    colors[position + 1]
-                            )
-                    );
-                } else {
-                    viewPager.setBackgroundColor(colors[colors.length - 1]);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 }

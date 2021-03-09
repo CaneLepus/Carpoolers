@@ -46,7 +46,7 @@ class ProfilePage : AppCompatActivity() {
     private lateinit var updateButton: Button
     private var lat by Delegates.notNull<Double>()
     private var long by Delegates.notNull<Double>()
-    private val geocoder = Geocoder(this, Locale.getDefault())
+    private lateinit var geocoder: Geocoder
     private lateinit var email: String
     private lateinit var address: TextView
     private lateinit var ratings: String // not implemented
@@ -58,6 +58,8 @@ class ProfilePage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_page)
+
+        geocoder = Geocoder(this, Locale.getDefault())
 
         profilePic = findViewById(R.id.profilePictureView)
         first = findViewById(R.id.firstNameInput)
