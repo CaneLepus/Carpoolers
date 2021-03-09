@@ -28,7 +28,7 @@ public class SwipeActivity extends AppCompatActivity {
 
     ViewPager viewPager;
     Adapter adapter;
-    Button button;
+    ImageView button;
     List<Model> models;
     Integer[] colors = null;
     ArgbEvaluator argbEvaluator = new ArgbEvaluator();
@@ -112,7 +112,7 @@ public class SwipeActivity extends AppCompatActivity {
                 }
         );
 
-        button = findViewById(R.id.chatButton);
+        button = findViewById(R.id.imageViewLike);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(this, ChatLogActivity.class);
             startActivity(intent);

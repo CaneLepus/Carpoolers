@@ -34,7 +34,7 @@ public class SwipeFragmentJava extends Fragment {
 
     ViewPager viewPager;
     Adapter adapter;
-    Button button;
+    ImageView button;
     List<Model> models;
     Integer[] colors = null;
     ArgbEvaluator argbEvaluator = new ArgbEvaluator();
@@ -131,7 +131,7 @@ public class SwipeFragmentJava extends Fragment {
                 }
         );
 
-        button = v.findViewById(R.id.chatButton);
+        button = v.findViewById(R.id.imageViewLike);
         button.setOnClickListener(v0 -> {
             Intent intent = new Intent(getActivity(), ChatLogActivity.class);
             startActivity(intent);

@@ -18,8 +18,7 @@
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/black"
             android:layout_gravity="bottom"
-            app:tabIndicator="@color/colorDarkGray"
-            app:tabTextColor="@color/black">
+            app:tabIndicator="@color/colorDarkGray">
         </com.google.android.material.tabs.TabLayout>
 
 </com.example.carpoolers.CustomViewPager>
