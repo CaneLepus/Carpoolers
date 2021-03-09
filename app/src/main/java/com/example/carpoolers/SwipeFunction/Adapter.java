@@ -41,6 +41,8 @@ public class Adapter extends PagerAdapter {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.swipe_item, container, false);
 
+
+
         ImageView imageView;
         TextView title, desc;
 

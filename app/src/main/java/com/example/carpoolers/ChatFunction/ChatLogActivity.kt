@@ -28,6 +28,14 @@ class ChatLogActivity : AppCompatActivity() {
         adapter.add(ChatRightItem())
 
         chatLogRecyclerView.adapter = adapter
+
+        sendMesageButton.setOnClickListener {
+            performSendMessage()
+        }
+    }
+
+    private fun performSendMessage() {
+
     }
 }
 
