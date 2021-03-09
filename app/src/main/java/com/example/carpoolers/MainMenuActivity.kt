@@ -2,13 +2,10 @@ package com.example.carpoolers
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import com.example.carpoolers.TabLayoutAdapter.ViewPagerAdapter
 import com.example.carpoolers.fragments.MainMenuFragment
 import com.example.carpoolers.fragments.ProfilePageFragment
-import com.example.carpoolers.fragments.SwipeFragment
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.carpoolers.fragments.SwipeFragmentJava
 import kotlinx.android.synthetic.main.activity_mainmenu.*
 
 class MainMenuActivity : AppCompatActivity() {
@@ -22,11 +19,12 @@ class MainMenuActivity : AppCompatActivity() {
     private fun setUpTabs(){
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(MainMenuFragment(), "")
-        adapter.addFragment(SwipeFragment(), "Swipe")
+        adapter.addFragment(SwipeFragmentJava(), "Swipe")
         adapter.addFragment(MainMenuFragment(), "Matches")
         adapter.addFragment(ProfilePageFragment(), "Profile")
         adapter.addFragment(MainMenuFragment(), "Settings")
         viewPager.adapter = adapter
+        viewPager.setPagingEnabled(true)
         tabs.setupWithViewPager(viewPager)
 
         tabs.getTabAt(0)!!.setIcon(R.drawable.ic_action_name)

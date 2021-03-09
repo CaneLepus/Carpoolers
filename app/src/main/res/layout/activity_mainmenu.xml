@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainMenuActivity">
 
-        <androidx.viewpager.widget.ViewPager
+        <com.example.carpoolers.CustomViewPager
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/viewPager">
@@ -22,7 +22,7 @@
             app:tabTextColor="@color/black">
         </com.google.android.material.tabs.TabLayout>
 
-</androidx.viewpager.widget.ViewPager>
+</com.example.carpoolers.CustomViewPager>
 
 
 </RelativeLayout>
