@@ -1,6 +1,8 @@
 package com.example.carpoolers
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -11,29 +13,26 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.carpoolers.SwipeFunction.SwipeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.android.synthetic.main.chat_left_row.*
 import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
+
 /**
- * @author Shmonn<3
  * This class handles the profile page where you can change information, profile picture etc.
+ * @author Shmonn<3
  */
 class ProfilePage : AppCompatActivity() {
     private lateinit var profilePic: ImageView
@@ -81,19 +80,13 @@ class ProfilePage : AppCompatActivity() {
         passWordField = findViewById(R.id.passInput)
         updateButton = findViewById(R.id.updateButton)
         updateButton.setOnClickListener {
-            update()
+            updateAction()
         }
         address = findViewById(R.id.addressInput)
         checkBox = findViewById(R.id.checkBox)
         deleteButton = findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener {
-            auth.currentUser.delete().addOnSuccessListener {
-                Toast.makeText(this, "Account deleted", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            }.addOnFailureListener{
-                Toast.makeText(this, "Account deletion failed", Toast.LENGTH_SHORT).show()
-            }
+            deleteAction()
         }
 
         checkPermission()
@@ -199,14 +192,14 @@ class ProfilePage : AppCompatActivity() {
 
 
                 }
-        }catch (e : IOException){
+        }catch (e: IOException){
             Log.i("MAGMA V3 DEBUG>>>>", "IT FAILED SOMEHOW")
         }
     }
 
 
 
-    private fun update() {
+    private fun updateAction() {
         var profile = false
         var pass = false
 
@@ -223,10 +216,17 @@ class ProfilePage : AppCompatActivity() {
             lat = addressInfo[0].latitude
             long = addressInfo[0].longitude
 
-            val userInfo = User(first.text.toString(), last.text.toString()
-                , phone.text.toString()
-                , lat, long, bio.text.toString(), ArrayList()
-                , "token", "")
+            val userInfo = User(
+                first.text.toString(),
+                last.text.toString(),
+                phone.text.toString(),
+                lat,
+                long,
+                bio.text.toString(),
+                ArrayList(),
+                "token",
+                ""
+            )
             query.set(userInfo.storeFormat())
 
             auth.currentUser.updateEmail(email)
@@ -240,6 +240,7 @@ class ProfilePage : AppCompatActivity() {
         }
 
         if(checkBox.isChecked){
+            //TODO: se till att man kan lägga till ny profilbild här
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
         }
@@ -289,5 +290,31 @@ class ProfilePage : AppCompatActivity() {
                     initProfile()
                 }
             }
+    }
+
+    private fun deleteAction() {
+        AlertDialog.Builder(this)
+            .setIcon(R.drawable.notifications_icon)
+            .setTitle("Deleting account")
+            .setMessage("Are you sure you want to delete your account? This cannot be undone")
+            .setPositiveButton("Yes",
+                DialogInterface.OnClickListener { dialog, which ->
+                    auth.currentUser.delete().addOnSuccessListener {
+                    Toast.makeText(this, "Account deleted", Toast.LENGTH_SHORT).show()
+                        //TODO: se till att ta bort profilbilden också
+                        query.get().addOnSuccessListener { document ->
+                            document.reference.delete().addOnSuccessListener {
+                                Toast.makeText(this, "User documents deleted", Toast.LENGTH_SHORT).show()
+                            }
+                        }.addOnFailureListener {
+                            Toast.makeText(this, "Failed to delete user documents", Toast.LENGTH_SHORT).show()
+                        }
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                }.addOnFailureListener{
+                    Toast.makeText(this, "Account deletion failed", Toast.LENGTH_SHORT).show()
+                } })
+            .setNegativeButton("No", null)
+            .show()
     }
 }
