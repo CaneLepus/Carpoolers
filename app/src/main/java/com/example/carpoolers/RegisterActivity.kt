@@ -33,7 +33,6 @@ class RegisterActivity : AppCompatActivity() {
     private val pickImage = 100;
     var lat by Delegates.notNull<Double>()
     var long by Delegates.notNull<Double>()
-    private val n = NotificationHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +58,8 @@ class RegisterActivity : AppCompatActivity() {
         if (first.text.toString() != "" && second.text.toString() != ""){
                 if (phone.text.isValidPhoneNumber()){
                     if (getCoordinates()) {
-                        var token = n.getToken() //debug
-                        Thread.sleep(1000) //debug
+                        var token = Singleton.notifications.getToken()
+                        Thread.sleep(1000)
                         var user = auth.currentUser
                         val collection = db.collection("users")
                         val userInfo = User(first.text.toString(), second.text.toString(), phone.text.toString(), lat, long, bio.text.toString(), ArrayList()
