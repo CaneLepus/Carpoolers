@@ -1,21 +1,25 @@
 package com.example.carpoolers.SwipeFunction;
 
 public class Model {
-    private int image;
+    private String image;
     private String title;
     private String desc;
+    private Float rating;
+    private String uid;
 
-    public Model(int image, String title, String desc) {
+    public Model(String image, String uid, String title, String desc, Float rating) {
         this.image = image;
         this.title = title;
         this.desc = desc;
+        this.rating = rating;
+        this.uid = uid;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -34,4 +38,8 @@ public class Model {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    public float getRating(){return rating;}
+
+    public String getUid(){return uid;}
 }

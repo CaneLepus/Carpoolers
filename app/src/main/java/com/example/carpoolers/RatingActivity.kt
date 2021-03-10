@@ -1,29 +1,23 @@
 package com.example.carpoolers
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.RatingBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
-import java.util.*
-import kotlin.collections.ArrayList
 
+// UNUSED.... FOR NOW
 class RatingActivity : AppCompatActivity() {
 
     val db = Firebase.firestore
     val auth = Firebase.auth
-    lateinit var rating: RatingBar
-    lateinit var button: Button
     private val users = db.collection("users")
-    private val query = users.document(auth.currentUser.uid)
-    var arrList : ArrayList<Double> = ArrayList()
+    var arrList : ArrayList<Number> = ArrayList()
     var finalRating = 0.0
 
 
@@ -33,10 +27,8 @@ class RatingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rating)
 
-        rating = findViewById(R.id.ratingBar)
-        button = findViewById(R.id.button)
-
-        getRatingsFromDb()
+        var rating : RatingBar = findViewById(R.id.ratingBar)
+        var button : Button = findViewById(R.id.button)
 
 
         Log.d("-----------------", arrList.toString())
@@ -47,19 +39,26 @@ class RatingActivity : AppCompatActivity() {
     }
 
 
-    fun getRatingsFromDb() {
+    fun getRatingsFromDb(uid : String, rating : Float) {
 
+        val query = users.document(uid)
 
         query.get().addOnSuccessListener { document ->
-            arrList = document.get("rating") as ArrayList<Double>
+            arrList = document.get("rating") as ArrayList<Number>
 
             for(item in arrList){
-                finalRating += item
+                val it: Float = item.toFloat()
+                finalRating += it
             }
 
-            finalRating /= arrList.size
+            arrList.add(rating.toDouble())
 
-            rating.rating = finalRating.toFloat()
+            val data = hashMapOf("rating" to arrList)
+
+            db.collection("users").document(uid)
+                .set(data, SetOptions.merge())
+
+
 
             Toast.makeText(
                     this, arrList.toString(),
@@ -75,10 +74,16 @@ class RatingActivity : AppCompatActivity() {
 
     }
 
+    fun rateUser(){
+
+    }
+
     private fun test(){
 
-        Toast.makeText(this, "You gave a rating of " + rating.rating + " stars", Toast.LENGTH_LONG).show()
-        Log.i(".RatingActivity","Rating given: " + rating.rating)
+
+
+        //Toast.makeText(this, "You gave a rating of " + rating.rating + " stars", Toast.LENGTH_LONG).show()
+        //Log.i(".RatingActivity","Rating given: " + rating.rating)
 
     }
     }

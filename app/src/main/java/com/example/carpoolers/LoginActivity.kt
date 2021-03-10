@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
                     auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
-                                val intent = Intent(this, SwipeActivity::class.java)
+                                val intent = Intent(this, MainMenuActivity::class.java)
                                 startActivity(intent)
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TAG", "signInWithEmail:success")
@@ -92,9 +92,9 @@ class LoginActivity : AppCompatActivity() {
             val ratings = snapshot.result?.get("rating")
             val fcmKey = snapshot.result?.get("fcmKey")
             Singleton.user = User(first as String, second as String, phone as String,
-                    lat as Double, long as Double, bio as String, ratings as ArrayList<Double>, fcmKey as String)
+                    lat as Double, long as Double, bio as String, ratings as ArrayList<Double>, fcmKey as String, "")
             Log.d("TAG", Singleton.user.storeFormat().toString())
-            val intent = Intent(this, SwipeActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }else{
             val intent = Intent(applicationContext, RegisterActivity::class.java)

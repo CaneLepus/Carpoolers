@@ -1,6 +1,7 @@
-package com.example.carpoolers
+package com.example.carpoolers.fragments
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -9,33 +10,39 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.SyncStateContract.Helpers.update
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.carpoolers.SwipeFunction.SwipeActivity
+import com.example.carpoolers.MainActivity
+import com.example.carpoolers.R
+import com.example.carpoolers.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.android.synthetic.main.chat_left_row.*
 import java.io.File
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 /**
  * @author Shmonn<3
  * This class handles the profile page where you can change information, profile picture etc.
+ * modded by FELIX xD
  */
-class ProfilePage : AppCompatActivity() {
+
+class ProfilePageFragment : Fragment() {
+
     private lateinit var profilePic: ImageView
     private lateinit var first: TextView
     private lateinit var last: TextView
@@ -65,40 +72,62 @@ class ProfilePage : AppCompatActivity() {
     private val users = db.collection("users")
     private val query = users.document(auth.currentUser.uid)
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile_page)
+    }
 
-        geocoder = Geocoder(this, Locale.getDefault())
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-        profilePic = findViewById(R.id.profilePictureView)
-        first = findViewById(R.id.firstNameInput)
-        last = findViewById(R.id.lastNameInput)
-        bio = findViewById(R.id.bioInput)
-        phone = findViewById(R.id.phoneInput)
-        emailInputWindow = findViewById(R.id.emailInput)
-        displayName = findViewById(R.id.nameDisplayTextField)
-        passWordField = findViewById(R.id.passInput)
-        updateButton = findViewById(R.id.updateButton)
-        updateButton.setOnClickListener {
-            update()
+
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.activity_profile_page, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        var v : View? = view
+
+
+
+        geocoder = Geocoder(context, Locale.getDefault())
+
+        if (v != null) {
+            profilePic = v.findViewById(R.id.profilePictureView)
+            first = v.findViewById(R.id.firstNameInput)
+            last = v.findViewById(R.id.lastNameInput)
+            bio = v.findViewById(R.id.bioInput)
+            phone = v.findViewById(R.id.phoneInput)
+            emailInputWindow = v.findViewById(R.id.emailInput)
+            displayName = v.findViewById(R.id.nameDisplayTextField)
+            passWordField = v.findViewById(R.id.passInput)
+            updateButton = v.findViewById(R.id.updateButton)
+            updateButton.setOnClickListener {
+                update()
+            }
+            address = v.findViewById(R.id.addressInput)
+            checkBox = v.findViewById(R.id.checkBox)
+            deleteButton = v.findViewById(R.id.deleteButton)
         }
-        address = findViewById(R.id.addressInput)
-        checkBox = findViewById(R.id.checkBox)
-        deleteButton = findViewById(R.id.deleteButton)
+
         deleteButton.setOnClickListener {
             auth.currentUser.delete().addOnSuccessListener {
-                Toast.makeText(this, "Account deleted", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, MainActivity::class.java)
+                Toast.makeText(context, "Account deleted, reverting to Start screen", Toast.LENGTH_LONG).show()
+                val intent = Intent(activity, MainActivity::class.java)
                 startActivity(intent)
             }.addOnFailureListener{
-                Toast.makeText(this, "Account deletion failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Account deletion failed", Toast.LENGTH_SHORT).show()
             }
         }
 
         checkPermission()
         initProfile()
         test()
+
     }
 
     private fun initProfile() {
@@ -124,25 +153,29 @@ class ProfilePage : AppCompatActivity() {
 
         }.addOnFailureListener {
             Toast.makeText(
-                this, "Some or all parts of profile could not be initialized",
+                context, "Some or all parts of profile could not be initialized",
                 Toast.LENGTH_SHORT
             ).show()
         }
     }
 
     private fun checkPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
+        if (context?.let {
+                ContextCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            }
+            != PackageManager.PERMISSION_GRANTED && context?.let {
+                ContextCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            }
             != PackageManager.PERMISSION_GRANTED
         ) { //Can add more as per requirement
             ActivityCompat.requestPermissions(
-                this,
+                context as Activity,
                 arrayOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -182,7 +215,7 @@ class ProfilePage : AppCompatActivity() {
         if (auth.currentUser != null){
             path = "images/" + auth.currentUser.uid + ".jpg"
         }
-        Toast.makeText(this, path, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, path, Toast.LENGTH_LONG).show()
 
         val storageReference : StorageReference = FirebaseStorage.getInstance().reference.child(path)
 
@@ -245,19 +278,19 @@ class ProfilePage : AppCompatActivity() {
         }
 
         if(profile && !pass){
-            Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
-            Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Profile updated", Toast.LENGTH_SHORT).show()
             Thread.sleep(3000)
             initProfile()
         } else if(profile && pass){
-            Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
-            Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Profile updated", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Password updated", Toast.LENGTH_SHORT).show()
             Thread.sleep(3000)
             initProfile()
         } else if (!profile && pass){
-            Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
-            Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Password updated", Toast.LENGTH_SHORT).show()
             Thread.sleep(3000)
             initProfile()
         }
@@ -266,7 +299,7 @@ class ProfilePage : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == pickImage){
+        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == pickImage){
             val imageUri = data?.data
             if (imageUri != null) {
                 updateInfo(imageUri)
@@ -280,14 +313,18 @@ class ProfilePage : AppCompatActivity() {
         auth.currentUser.updateProfile(changeRequest.build())
             .addOnCompleteListener { task ->
                 if (task.isSuccessful){
-                    Toast.makeText(this, "Loading...", Toast.LENGTH_LONG).show()
-                    Toast.makeText(this, "Picture updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Picture updated", Toast.LENGTH_SHORT).show()
                     Thread.sleep(3000)
                     initProfile()
                 } else if(task.isCanceled){
-                    Toast.makeText(this, "Picture update failed/cancelled", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Picture update failed/cancelled", Toast.LENGTH_LONG).show()
                     initProfile()
                 }
             }
     }
+
+
+
+
 }

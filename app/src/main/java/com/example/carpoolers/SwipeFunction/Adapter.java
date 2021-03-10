@@ -2,17 +2,27 @@ package com.example.carpoolers.SwipeFunction;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.example.carpoolers.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class Adapter extends PagerAdapter {
@@ -45,18 +55,41 @@ public class Adapter extends PagerAdapter {
 
         ImageView imageView;
         TextView title, desc;
+        RatingBar ratingBar;
 
         imageView = view.findViewById(R.id.image);
         title = view.findViewById(R.id.title);
         desc = view.findViewById(R.id.desc);
+        ratingBar = view.findViewById(R.id.ratingBar);
 
-        imageView.setImageResource(models.get(position).getImage());
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(models.get(position).getImage());
+
+
+
+
+
+        try {
+            File file = File.createTempFile("test", "jpg");
+            storageReference.getFile(file).addOnSuccessListener(taskSnapshot -> {
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                imageView.setImageBitmap(bitmap);
+            }
+
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         title.setText(models.get(position).getTitle());
         desc.setText(models.get(position).getDesc());
+        ratingBar.setRating(models.get(position).getRating());
 
         view.setOnClickListener(v -> {
             Intent intent = new Intent(context, TemporaryProfileActivity.class);
             intent.putExtra("param", models.get(position).getTitle());
+            intent.putExtra("rating", models.get(position).getRating());
+            intent.putExtra("uid", models.get(position).getUid());
             context.startActivity(intent);
             //finish();
         });
