@@ -1,5 +1,6 @@
 package com.example.carpoolers.fragments;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -24,7 +25,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -55,81 +60,17 @@ public class SwipeFragmentJava extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.activity_swipe,container,false);
+        View view = inflater.inflate(R.layout.activity_swipe, container, false);
         return view;
     }
 
 
-
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         View v = getView();
-
-        users.get().addOnSuccessListener(documentSnapshot -> {
-                    models = new ArrayList<>();
-
-                    for (DocumentSnapshot document : documentSnapshot) {
-
-
-                        String uid = document.getId();
-                        firstName = (String) document.get("first");
-                        lastName = document.get("last").toString();
-                        bio = document.get("biography").toString();
-
-                        ArrayList<Number> ratings  = (ArrayList<Number>) document.get("rating");
-                        Float rating = 0.0f;
-
-                        for(Number item : ratings){
-                            Float it = item.floatValue();
-                            rating += it;
-                        }
-                        rating /= ratings.size();
-
-
-                        models.add(new Model("images/"+uid+".jpg",uid ,  firstName + " " + lastName, "" + bio, rating));
-                        Log.i("MAGMA v3 debug>>", "Image URL: image/" + uid);
-
-                    }
-
-                    adapter = new Adapter(models, getContext());
-
-                    viewPager = v.findViewById(R.id.viewPagern);
-                    viewPager.setAdapter(adapter);
-                    viewPager.setPadding(130, 0, 130, 0);
-
-
-                    viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                            if (position < (adapter.getCount() - 1) && position < (colors.length - 1)) {
-                                viewPager.setBackgroundColor(
-
-                                        (Integer) argbEvaluator.evaluate(
-                                                positionOffset,
-                                                colors[position],
-                                                colors[position + 1]
-                                        )
-                                );
-                            } else {
-                                viewPager.setBackgroundColor(colors[colors.length - 1]);
-                            }
-                        }
-
-                        @Override
-                        public void onPageSelected(int position) {
-
-                        }
-
-                        @Override
-                        public void onPageScrollStateChanged(int state) {
-
-                        }
-                    });
-                }
-        );
+        listenForUpdates();
 
         button = v.findViewById(R.id.imageViewLike);
         button.setOnClickListener(v0 -> {
@@ -158,4 +99,82 @@ public class SwipeFragmentJava extends Fragment {
 
     }
 
+    private void listenForUpdates() {
+        db.collection("users")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("TAG", "Listen failed.", e);
+                            return;
+                        }
+
+                        List<String> cities = new ArrayList<>();
+                        models = new ArrayList<>();
+                        View v = getView();
+
+                        for (DocumentSnapshot document : value) {
+
+
+                            String uid = document.getId();
+                            firstName = (String) document.get("first");
+                            lastName = document.get("last").toString();
+                            bio = document.get("biography").toString();
+
+                            ArrayList<Number> ratings = (ArrayList<Number>) document.get("rating");
+                            Float rating = 0.0f;
+
+                            for (Number item : ratings) {
+                                Float it = item.floatValue();
+                                rating += it;
+                            }
+                            rating /= ratings.size();
+
+
+                            models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating));
+                            Log.i("MAGMA v3 debug>>", "Image URL: image/" + uid);
+
+                        }
+
+                        adapter = new Adapter(models, getContext());
+
+                        viewPager = v.findViewById(R.id.viewPagern);
+                        viewPager.setAdapter(adapter);
+                        viewPager.setPadding(130, 0, 130, 0);
+
+
+                        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                            @Override
+                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                                if (position < (adapter.getCount() - 1) && position < (colors.length - 1)) {
+                                    viewPager.setBackgroundColor(
+
+                                            (Integer) argbEvaluator.evaluate(
+                                                    positionOffset,
+                                                    colors[position],
+                                                    colors[position + 1]
+                                            )
+                                    );
+                                } else {
+                                    viewPager.setBackgroundColor(colors[colors.length - 1]);
+                                }
+                            }
+
+                            @Override
+                            public void onPageSelected(int position) {
+
+                            }
+
+                            @Override
+                            public void onPageScrollStateChanged(int state) {
+
+                            }
+                        });
+                        Log.d("TAG", "Current cites in CA: " + cities);
+                    }
+                });
     }
+}
+

@@ -58,8 +58,18 @@ class LoginActivity : AppCompatActivity() {
                     auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
-                                val intent = Intent(this, MainMenuActivity::class.java)
-                                startActivity(intent)
+                                val collection = db.collection("users")
+                                val document = collection.document(auth.currentUser.uid)
+                                    .get()
+                                    .addOnSuccessListener { documentSnapshot ->
+                                        if (documentSnapshot.exists()){
+                                            val intent = Intent(this, MainMenuActivity::class.java)
+                                            startActivity(intent)
+                                        }else{
+                                            val intent = Intent(this, RegisterActivity::class.java)
+                                            startActivity(intent)
+                                        }
+                                    }
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TAG", "signInWithEmail:success")
 
@@ -76,30 +86,6 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-    fun initiateUser(){
-        val users = db.collection("users")
-        val query = users.document(auth.currentUser.uid)
-        val snapshot = query.get()
-        Thread.sleep(2000)
 
-        if (snapshot.result?.exists() == true){
-            val first = snapshot.result?.get("first")
-            val second = snapshot.result?.get("last")
-            val phone = snapshot.result?.get("phone")
-            val lat = snapshot.result?.get("latitude")
-            val long = snapshot.result?.get("longitude")
-            val bio = snapshot.result?.get("biography")
-            val ratings = snapshot.result?.get("rating")
-            val fcmKey = snapshot.result?.get("fcmKey")
-            Singleton.user = User(first as String, second as String, phone as String,
-                    lat as Double, long as Double, bio as String, ratings as ArrayList<Double>, fcmKey as String, "")
-            Log.d("TAG", Singleton.user.storeFormat().toString())
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        }else{
-            val intent = Intent(applicationContext, RegisterActivity::class.java)
-            startActivity(intent)
-        }
-    }
     }
 

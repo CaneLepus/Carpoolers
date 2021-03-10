@@ -213,7 +213,7 @@ class ProfilePageFragment : Fragment() {
         var path : String = ""
 
         if (auth.currentUser != null){
-            path = "images/" + auth.currentUser.uid + ".jpg"
+            path = "images/" + auth.currentUser.uid
         }
         Toast.makeText(context, path, Toast.LENGTH_LONG).show()
 

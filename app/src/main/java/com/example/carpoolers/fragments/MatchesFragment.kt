@@ -22,7 +22,7 @@ class MatchesFragment : Fragment() {
 
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_matches, container, false)
+        return inflater.inflate(R.layout.activity_swipe, container, false)
     }
 
 
