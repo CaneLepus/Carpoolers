@@ -133,7 +133,7 @@ public class SwipeFragmentJava extends Fragment {
 
         button = v.findViewById(R.id.imageViewLike);
         button.setOnClickListener(v0 -> {
-            Intent intent = new Intent(getActivity(), ChatLogActivity.class);
+            Intent intent = new Intent(getActivity(), ChatLogActivity.class).putExtra("roomID", "1001");
             startActivity(intent);
         });
 
