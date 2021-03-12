@@ -5,12 +5,14 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.animation.ArgbEvaluator;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.carpoolers.R;
 import com.example.carpoolers.SwipeFunction.Adapter;
@@ -74,6 +76,7 @@ public class SwipeFragmentJava extends Fragment {
 
 
         button = v.findViewById(R.id.imageViewLike);
+        //button2 = v.findViewById(R.id.)
         button.setOnClickListener(v0 -> {
             //Intent intent = new Intent(getActivity(), ChatLogActivity.class).putExtra("roomID", "1001");
             //startActivity(intent);
@@ -85,6 +88,10 @@ public class SwipeFragmentJava extends Fragment {
             Map<Object, Object> myMap = createMap(auth.getCurrentUser().getUid(), models.get(currentPos).getUid());
 
             Log.d("TAG", "User id: ${user.uid}");
+            v0.setBackgroundColor(Color.BLACK);
+
+            Toast.makeText(getContext(), "Liked! A chat request has been sent", Toast.LENGTH_LONG);
+
             //rooms.document(String.valueOf(count++)).set(myMap);
         });
 

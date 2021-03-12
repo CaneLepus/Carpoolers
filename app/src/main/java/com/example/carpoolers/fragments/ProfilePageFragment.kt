@@ -232,13 +232,9 @@ class ProfilePageFragment : Fragment() {
                     var bitmap : Bitmap = BitmapFactory.decodeFile(file.absolutePath)
                     profilePic.setImageBitmap(bitmap)
 
-                    Log.i("MAGMA V3 DEBUG>>>>", "IMAGE SHOULD BE DISPLAYED")
-
-
-
                 }
         }catch (e: IOException){
-            Log.i("MAGMA V3 DEBUG>>>>", "IT FAILED SOMEHOW")
+            Log.i("Debug", "Profile picture failed to load.")
         }
     }
 
@@ -285,7 +281,6 @@ class ProfilePageFragment : Fragment() {
         }
 
         if(checkBox.isChecked){
-            //TODO: se till att man kan lägga till ny profilbild här
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
 
