@@ -23,6 +23,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.carpoolers.*
+import com.example.carpoolers.FacebookActivity
+import com.example.carpoolers.MainActivity
+import com.example.carpoolers.R
+import com.example.carpoolers.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -67,6 +71,7 @@ class ProfilePageFragment : Fragment() {
     private lateinit var email: String
     private lateinit var address: TextView
     private lateinit var ratings: String // not implemented
+    private lateinit var shareButton: Button
     private var auth: FirebaseAuth = Firebase.auth
     private val db = Firebase.firestore
     private val storage = FirebaseStorage.getInstance()
@@ -113,10 +118,15 @@ class ProfilePageFragment : Fragment() {
             address = v.findViewById(R.id.addressInput)
             checkBox = v.findViewById(R.id.checkBox)
             deleteButton = v.findViewById(R.id.deleteButton)
+            shareButton = v.findViewById(R.id.shareButton)
         }
 
         deleteButton.setOnClickListener {
             deleteAction()
+        }
+        shareButton.setOnClickListener {
+            val intent = Intent(context, FacebookActivity::class.java)
+            startActivity(intent)
         }
 
         checkPermission()
