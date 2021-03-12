@@ -1,19 +1,19 @@
 package com.example.carpoolers
 
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.example.carpoolers.SwipeFunction.SwipeActivity
-import com.google.android.gms.tasks.Tasks
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlin.concurrent.thread
+
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -29,8 +29,10 @@ class LoginActivity : AppCompatActivity() {
         val registerButton = findViewById<Button>(R.id.registerButton)
         registerButton.setOnClickListener {
             if (email.text.toString() == "" || password.text.toString() == ""){
-                Toast.makeText(this, "Please fill out both fields!",
-                Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this, "Please fill out both fields!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }else {
                 auth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
                     .addOnCompleteListener(this) { task ->
@@ -52,8 +54,10 @@ class LoginActivity : AppCompatActivity() {
             val loginButton = findViewById<Button>(R.id.loginButton)
             loginButton.setOnClickListener {
                 if (email.text.toString() == "" || password.text.toString() == ""){
-                    Toast.makeText(this, "Please fill out both fields!",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this, "Please fill out both fields!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }else {
                     auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                         .addOnCompleteListener(this) { task ->

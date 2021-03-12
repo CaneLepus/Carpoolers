@@ -1,8 +1,6 @@
 package com.example.carpoolers
 
 import android.app.ProgressDialog
-import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.location.Geocoder
@@ -11,23 +9,24 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.util.Log
-import android.webkit.MimeTypeMap
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.carpoolers.SwipeFunction.SwipeActivity
+import com.facebook.CallbackManager
+import com.facebook.FacebookSdk
+import com.facebook.share.model.ShareLinkContent
+import com.facebook.share.widget.ShareDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import java.io.File
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
+
 
 class RegisterActivity : AppCompatActivity() {
     val db = Firebase.firestore
@@ -183,6 +182,7 @@ class RegisterActivity : AppCompatActivity() {
 
             }
     }
+
 
 
 }

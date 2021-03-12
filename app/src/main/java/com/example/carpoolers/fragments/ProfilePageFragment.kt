@@ -20,6 +20,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.carpoolers.FacebookActivity
 import com.example.carpoolers.MainActivity
 import com.example.carpoolers.R
 import com.example.carpoolers.User
@@ -66,6 +67,7 @@ class ProfilePageFragment : Fragment() {
     private lateinit var email: String
     private lateinit var address: TextView
     private lateinit var ratings: String // not implemented
+    private lateinit var shareButton: Button
     private var auth: FirebaseAuth = Firebase.auth
     private val db = Firebase.firestore
     private val storage = FirebaseStorage.getInstance()
@@ -112,6 +114,7 @@ class ProfilePageFragment : Fragment() {
             address = v.findViewById(R.id.addressInput)
             checkBox = v.findViewById(R.id.checkBox)
             deleteButton = v.findViewById(R.id.deleteButton)
+            shareButton = v.findViewById(R.id.shareButton)
         }
 
         deleteButton.setOnClickListener {
@@ -122,6 +125,10 @@ class ProfilePageFragment : Fragment() {
             }.addOnFailureListener{
                 Toast.makeText(context, "Account deletion failed", Toast.LENGTH_SHORT).show()
             }
+        }
+        shareButton.setOnClickListener {
+            val intent = Intent(context, FacebookActivity::class.java)
+            startActivity(intent)
         }
 
         checkPermission()
