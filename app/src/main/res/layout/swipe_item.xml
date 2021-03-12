@@ -27,7 +27,7 @@
                 android:id="@+id/title"
                 android:textColor="#262626"
                 android:layout_below="@id/image"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="16dp"
                 android:text="profile_name"
                 android:textSize="16sp"
@@ -40,7 +40,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:maxLines="3"
+                android:maxLines="1"
                 android:drawablePadding="10dp"
                 android:ellipsize="end"
                 android:text="description"
@@ -51,10 +51,13 @@
                 android:id="@+id/ratingBar"
                 android:layout_below="@id/desc"
                 android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:isIndicator="true"
+                android:clickable="false"
+                android:longClickable="false"
                 android:stepSize="0.5"/>
 
         </RelativeLayout>

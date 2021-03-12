@@ -1,39 +1,33 @@
 package com.example.carpoolers.fragments;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.animation.ArgbEvaluator;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import com.example.carpoolers.ChatFunction.ChatLogActivity;
 import com.example.carpoolers.R;
 import com.example.carpoolers.SwipeFunction.Adapter;
 import com.example.carpoolers.SwipeFunction.Model;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SwipeFragmentJava extends Fragment {
 
@@ -48,9 +42,12 @@ public class SwipeFragmentJava extends Fragment {
     private String lastName;
     private String bio;
 
+    private int currentPos;
+
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference users = db.collection("users");
+    CollectionReference rooms = db.collection("rooms");
     DocumentReference query = users.document(auth.getCurrentUser().getUid());
 
     @Override
@@ -70,12 +67,25 @@ public class SwipeFragmentJava extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         View v = getView();
-        listenForUpdates();
+
+        final int[] counter = {1};
+
+//        int count = Integer.parseInt((rooms.document().getId()));
+
 
         button = v.findViewById(R.id.imageViewLike);
         button.setOnClickListener(v0 -> {
-            Intent intent = new Intent(getActivity(), ChatLogActivity.class).putExtra("roomID", "1001");
-            startActivity(intent);
+            //Intent intent = new Intent(getActivity(), ChatLogActivity.class).putExtra("roomID", "1001");
+            //startActivity(intent);
+
+            //    Map<Any, Any> roomStore = Map.of(
+            //          "user1", auth.getCurrentUser().getUid(),
+            //        "user2", models.get(currentPos).getUid());
+
+            Map<Object, Object> myMap = createMap(auth.getCurrentUser().getUid(), models.get(currentPos).getUid());
+
+            Log.d("TAG", "User id: ${user.uid}");
+            //rooms.document(String.valueOf(count++)).set(myMap);
         });
 
         colors = new Integer[]{
@@ -97,6 +107,8 @@ public class SwipeFragmentJava extends Fragment {
                 getResources().getColor(R.color.color4)
         };
 
+        listenForUpdates();
+
     }
 
     private void listenForUpdates() {
@@ -115,26 +127,25 @@ public class SwipeFragmentJava extends Fragment {
                         View v = getView();
 
                         for (DocumentSnapshot document : value) {
-
-
                             String uid = document.getId();
-                            firstName = (String) document.get("first");
-                            lastName = document.get("last").toString();
-                            bio = document.get("biography").toString();
 
-                            ArrayList<Number> ratings = (ArrayList<Number>) document.get("rating");
-                            Float rating = 0.0f;
+                            if (!uid.equals(auth.getCurrentUser().getUid())) {
 
-                            for (Number item : ratings) {
-                                Float it = item.floatValue();
-                                rating += it;
+                                firstName = (String) document.get("first");
+                                lastName = document.get("last").toString();
+                                bio = document.get("biography").toString();
+
+                                ArrayList<Number> ratings = (ArrayList<Number>) document.get("rating");
+                                Float rating = 0.0f;
+
+                                for (Number item : ratings) {
+                                    Float it = item.floatValue();
+                                    rating += it;
+                                }
+                                rating /= ratings.size();
+
+                                models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating));
                             }
-                            rating /= ratings.size();
-
-
-                            models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating));
-                            Log.i("MAGMA v3 debug>>", "Image URL: image/" + uid);
-
                         }
 
                         adapter = new Adapter(models, getContext());
@@ -160,6 +171,8 @@ public class SwipeFragmentJava extends Fragment {
                                 } else {
                                     viewPager.setBackgroundColor(colors[colors.length - 1]);
                                 }
+
+                                currentPos = position;
                             }
 
                             @Override
@@ -176,5 +189,14 @@ public class SwipeFragmentJava extends Fragment {
                     }
                 });
     }
-}
 
+
+    private static Map<Object, Object> createMap(String user1, String user2) {
+        Map<Object, Object> myMap = new HashMap<>();
+        myMap.put("user1", user1);
+        myMap.put("user2", user2);
+        myMap.put("chatAlive", false);
+        return myMap;
+    }
+
+}
