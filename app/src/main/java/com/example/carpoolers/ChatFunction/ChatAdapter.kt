@@ -6,9 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carpoolers.R
-import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.activity_login.view.*
-import kotlinx.android.synthetic.main.chat_left_row.view.*
 import kotlinx.android.synthetic.main.list_item_chat.view.*
 
 class ChatAdapter(val chatMessages: List<Messages>, val uid: String): RecyclerView.Adapter<ChatAdapter.ViewHolder>() {

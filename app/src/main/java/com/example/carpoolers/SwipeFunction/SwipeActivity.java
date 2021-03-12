@@ -123,18 +123,27 @@ public class SwipeActivity extends AppCompatActivity {
                 getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color3),
                 getResources().getColor(R.color.color4),
+                getResources().getColor(R.color.color3),
+                getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color1),
                 getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color3),
                 getResources().getColor(R.color.color4),
+                getResources().getColor(R.color.color3),
+                getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color1),
                 getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color3),
                 getResources().getColor(R.color.color4),
+                getResources().getColor(R.color.color3),
+                getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color1),
                 getResources().getColor(R.color.color2),
                 getResources().getColor(R.color.color3),
-                getResources().getColor(R.color.color4)
+                getResources().getColor(R.color.color4),
+                getResources().getColor(R.color.color3),
+                getResources().getColor(R.color.color2),
+                getResources().getColor(R.color.color1),
         };
 
     }

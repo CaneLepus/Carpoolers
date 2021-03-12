@@ -18,7 +18,7 @@ class MainMenuActivity : AppCompatActivity() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(MainMenuFragment(), "")
         adapter.addFragment(SwipeFragmentJava(), "Swipe")
-        adapter.addFragment(MatchesFragment(), "")
+        adapter.addFragment(ChatsFragment(), "")
         adapter.addFragment(ProfilePageFragment(), "")
         adapter.addFragment(SettingsFragment(), "")
         viewPager.adapter = adapter

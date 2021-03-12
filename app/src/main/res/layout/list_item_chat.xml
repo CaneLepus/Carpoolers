@@ -12,24 +12,28 @@
         android:id="@+id/textViewChatReceived"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
         android:background="@drawable/round_chat"
+        android:textSize="15sp"
         android:maxWidth="220dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:paddingEnd="8dp"
-        android:paddingStart="24dp"
+        android:paddingStart="8dp"
         android:text="This is a message, This is a message, This is a message, This is a message." />
     <TextView
         android:id="@+id/textViewChatSent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is a message, This is a message, This is a message, This is a message."
+        android:layout_marginEnd="6dp"
+        android:text="hej hej hej på dig"
+        android:textSize="15sp"
         android:maxWidth="220dp"
         android:background="@drawable/round_chat"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:paddingStart="8dp"
-        android:paddingEnd="24dp"
+        android:paddingEnd="8dp"
         android:layout_gravity="end" />
 
 
