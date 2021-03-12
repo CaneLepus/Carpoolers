@@ -13,9 +13,7 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.SyncStateContract.Helpers.update
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,10 +21,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.carpoolers.MainActivity
-import com.example.carpoolers.MainMenuActivity
-import com.example.carpoolers.R
-import com.example.carpoolers.User
+import androidx.fragment.app.Fragment
+import com.example.carpoolers.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -38,6 +34,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.properties.Delegates
+
 
 /**
  * @author Shmonn<3
@@ -230,7 +227,7 @@ class ProfilePageFragment : Fragment() {
 
 
                 }
-        }catch (e : IOException){
+        }catch (e: IOException){
             Log.i("MAGMA V3 DEBUG>>>>", "IT FAILED SOMEHOW")
         }
     }
@@ -254,10 +251,17 @@ class ProfilePageFragment : Fragment() {
             lat = addressInfo[0].latitude
             long = addressInfo[0].longitude
 
-            val userInfo = User(first.text.toString(), last.text.toString()
-                , phone.text.toString()
-                , lat, long, bio.text.toString(), ArrayList()
-                , "token", "")
+            val userInfo = User(
+                first.text.toString(),
+                last.text.toString(),
+                phone.text.toString(),
+                lat,
+                long,
+                bio.text.toString(),
+                ArrayList(),
+                "token",
+                ""
+            )
             query.set(userInfo.storeFormat())
 
             auth.currentUser.updateEmail(email)
@@ -353,27 +357,60 @@ class ProfilePageFragment : Fragment() {
 
 
     private fun deleteAction() {
+        var tempuid = auth.currentUser.uid
         AlertDialog.Builder(context)
             .setIcon(R.drawable.notifications_icon)
             .setTitle("Deleting account")
             .setMessage("Are you sure you want to delete your account? This cannot be undone")
             .setPositiveButton("Yes",
                 DialogInterface.OnClickListener { dialog, which ->
+
                     auth.currentUser.delete().addOnSuccessListener {
                         Toast.makeText(context, "Account deleted", Toast.LENGTH_SHORT).show()
                         //TODO: se till att ta bort profilbilden också
+
+
+                        val photoRef: StorageReference =
+                            storage.getReference("images/$tempuid")
+
+                        photoRef.delete().addOnSuccessListener {
+
+                            Toast.makeText(
+                                context,
+                                "PROFILE IMAGE documents deleted",
+                                Toast.LENGTH_SHORT
+                            ).show()// File deleted successfully
+                        }.addOnFailureListener { // Uh-oh, an error occurred!
+
+                            Toast.makeText(
+                                context,
+                                "PROFILE PIC NOT DELETED",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
                         query.get().addOnSuccessListener { document ->
                             document.reference.delete().addOnSuccessListener {
-                                Toast.makeText(context, "User documents deleted", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "User documents deleted",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }.addOnFailureListener {
-                            Toast.makeText(context, "Failed to delete user documents", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Failed to delete user documents",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                         val intent = Intent(context, MainActivity::class.java)
                         startActivity(intent)
-                    }.addOnFailureListener{
-                        Toast.makeText(context, "Account deletion failed", Toast.LENGTH_SHORT).show()
-                    } })
+                    }.addOnFailureListener {
+                        Toast.makeText(context, "Account deletion failed", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                })
             .setNegativeButton("No", null)
             .show()
     }
