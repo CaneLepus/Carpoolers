@@ -2,6 +2,9 @@ package com.example.carpoolers.fragments
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -21,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.carpoolers.MainActivity
+import com.example.carpoolers.MainMenuActivity
 import com.example.carpoolers.R
 import com.example.carpoolers.User
 import com.google.firebase.auth.FirebaseAuth
@@ -115,13 +119,7 @@ class ProfilePageFragment : Fragment() {
         }
 
         deleteButton.setOnClickListener {
-            auth.currentUser.delete().addOnSuccessListener {
-                Toast.makeText(context, "Account deleted, reverting to Start screen", Toast.LENGTH_LONG).show()
-                val intent = Intent(activity, MainActivity::class.java)
-                startActivity(intent)
-            }.addOnFailureListener{
-                Toast.makeText(context, "Account deletion failed", Toast.LENGTH_SHORT).show()
-            }
+            deleteAction()
         }
 
         checkPermission()
@@ -273,8 +271,10 @@ class ProfilePageFragment : Fragment() {
         }
 
         if(checkBox.isChecked){
+            //TODO: se till att man kan lägga till ny profilbild här
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
+
         }
 
         if(profile && !pass){
@@ -302,7 +302,34 @@ class ProfilePageFragment : Fragment() {
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == pickImage){
             val imageUri = data?.data
             if (imageUri != null) {
-                updateInfo(imageUri)
+                //updateInfo()
+
+                var pd = ProgressDialog(context)
+                pd.setTitle("Uploading")
+                pd.show()
+
+                var filepath: Uri = data.data!!
+
+                var imageRef =
+                    FirebaseStorage.getInstance().reference.child("images/" + auth.currentUser.uid)
+                imageRef.putFile(filepath)
+                    .addOnSuccessListener { p0 ->
+                        pd.dismiss()
+                        Toast.makeText(context, "Image Uploaded!", Toast.LENGTH_LONG).show()
+                        val intent = Intent(context, MainMenuActivity::class.java)
+                        startActivity(intent)
+                    }
+                    .addOnFailureListener { p0 ->
+                        pd.dismiss()
+                        Toast.makeText(context, "Image NOT Uploaded!", Toast.LENGTH_LONG).show()
+
+                    }
+                    .addOnProgressListener { p0 ->
+
+                        var progress = (100.0 * p0.bytesTransferred) / p0.totalByteCount
+                        pd.setMessage("uploaded ${progress.toInt()}%")
+
+                    }
             }
         }
     }
@@ -322,6 +349,33 @@ class ProfilePageFragment : Fragment() {
                     initProfile()
                 }
             }
+    }
+
+
+    private fun deleteAction() {
+        AlertDialog.Builder(context)
+            .setIcon(R.drawable.notifications_icon)
+            .setTitle("Deleting account")
+            .setMessage("Are you sure you want to delete your account? This cannot be undone")
+            .setPositiveButton("Yes",
+                DialogInterface.OnClickListener { dialog, which ->
+                    auth.currentUser.delete().addOnSuccessListener {
+                        Toast.makeText(context, "Account deleted", Toast.LENGTH_SHORT).show()
+                        //TODO: se till att ta bort profilbilden också
+                        query.get().addOnSuccessListener { document ->
+                            document.reference.delete().addOnSuccessListener {
+                                Toast.makeText(context, "User documents deleted", Toast.LENGTH_SHORT).show()
+                            }
+                        }.addOnFailureListener {
+                            Toast.makeText(context, "Failed to delete user documents", Toast.LENGTH_SHORT).show()
+                        }
+                        val intent = Intent(context, MainActivity::class.java)
+                        startActivity(intent)
+                    }.addOnFailureListener{
+                        Toast.makeText(context, "Account deletion failed", Toast.LENGTH_SHORT).show()
+                    } })
+            .setNegativeButton("No", null)
+            .show()
     }
 
 

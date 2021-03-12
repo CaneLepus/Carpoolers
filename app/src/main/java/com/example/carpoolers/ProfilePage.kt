@@ -173,7 +173,7 @@ class ProfilePage : AppCompatActivity() {
         var path : String = ""
 
         if (auth.currentUser != null){
-            path = "images/" + auth.currentUser.uid + ".jpg"
+            path = "images/" + auth.currentUser.uid
         }
         Toast.makeText(this, path, Toast.LENGTH_LONG).show()
 
