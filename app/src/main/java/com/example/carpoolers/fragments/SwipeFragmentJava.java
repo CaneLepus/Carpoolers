@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class SwipeFragmentJava extends Fragment {
 
@@ -71,6 +72,8 @@ public class SwipeFragmentJava extends Fragment {
         View v = getView();
 
         final int[] counter = {1};
+
+
 
 //        int count = Integer.parseInt((rooms.document().getId()));
 
@@ -114,86 +117,85 @@ public class SwipeFragmentJava extends Fragment {
                 getResources().getColor(R.color.color4)
         };
 
+        initList();
+
+    }
+    private void initList(){
+        List<String> cities = new ArrayList<>();
+        models = new ArrayList<>();
+        View v = getView();
+        adapter = new Adapter(models, getContext());
+
+        viewPager = v.findViewById(R.id.viewPagern);
+        viewPager.setAdapter(adapter);
+        viewPager.setPadding(130, 0, 130, 0);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                if (position < (adapter.getCount() - 1) && position < (colors.length - 1)) {
+                    viewPager.setBackgroundColor(
+
+                            (Integer) argbEvaluator.evaluate(
+                                    positionOffset,
+                                    colors[position],
+                                    colors[position + 1]
+                            )
+                    );
+                } else {
+                    viewPager.setBackgroundColor(colors[colors.length - 1]);
+                }
+
+                currentPos = position;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         listenForUpdates();
 
     }
 
     private void listenForUpdates() {
+
+
         db.collection("users")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("TAG", "Listen failed.", e);
-                            return;
-                        }
-
-                        List<String> cities = new ArrayList<>();
-                        models = new ArrayList<>();
-                        View v = getView();
-
-                        for (DocumentSnapshot document : value) {
-                            String uid = document.getId();
-
-                            if (!uid.equals(auth.getCurrentUser().getUid())) {
-
-                                firstName = (String) document.get("first");
-                                lastName = document.get("last").toString();
-                                bio = document.get("biography").toString();
-
-                                ArrayList<Number> ratings = (ArrayList<Number>) document.get("rating");
-                                Float rating = 0.0f;
-
-                                for (Number item : ratings) {
-                                    Float it = item.floatValue();
-                                    rating += it;
-                                }
-                                rating /= ratings.size();
-
-                                models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating));
-                            }
-                        }
-
-                        adapter = new Adapter(models, getContext());
-
-                        viewPager = v.findViewById(R.id.viewPagern);
-                        viewPager.setAdapter(adapter);
-                        viewPager.setPadding(130, 0, 130, 0);
-
-
-                        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                            @Override
-                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                                if (position < (adapter.getCount() - 1) && position < (colors.length - 1)) {
-                                    viewPager.setBackgroundColor(
-
-                                            (Integer) argbEvaluator.evaluate(
-                                                    positionOffset,
-                                                    colors[position],
-                                                    colors[position + 1]
-                                            )
-                                    );
-                                } else {
-                                    viewPager.setBackgroundColor(colors[colors.length - 1]);
-                                }
-
-                                currentPos = position;
-                            }
-
-                            @Override
-                            public void onPageSelected(int position) {
-
-                            }
-
-                            @Override
-                            public void onPageScrollStateChanged(int state) {
-
-                            }
-                        });
-                        Log.d("TAG", "Current cites in CA: " + cities);
+                .addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w("TAG", "Listen failed.", e);
+                        return;
                     }
+                    models.clear();
+                    for (DocumentSnapshot document : value) {
+                        String uid = document.getId();
+
+                        if (!uid.equals(auth.getCurrentUser().getUid())) {
+
+                            firstName = (String) document.get("first");
+                            lastName = document.get("last").toString();
+                            bio = document.get("biography").toString();
+
+                            ArrayList<Number> ratings = (ArrayList<Number>) document.get("rating");
+                            Float rating = 0.0f;
+
+                            for (Number item : ratings) {
+                                Float it = item.floatValue();
+                                rating += it;
+                            }
+                            rating /= ratings.size();
+
+                            models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating));
+                        }
+                    }
+                    Log.d("TAG", "update recieved");
+                    Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
                 });
     }
 
