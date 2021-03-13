@@ -58,6 +58,7 @@
         android:layout_height="wrap_content"
         android:ems="15"
         android:inputType="phone"
+        android:maxLength="15"
         android:hint="Phone number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

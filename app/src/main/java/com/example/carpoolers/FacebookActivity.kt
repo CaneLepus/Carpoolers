@@ -85,17 +85,14 @@ class FacebookActivity : AppCompatActivity() {
                 val shareLinkContent = ShareLinkContent.Builder()
                     .setContentUrl(
                         Uri.parse(
-                            "https://www.google.com/maps/?q=${result.get("latitude")},${
-                                result.get(
-                                    "longitude"
-                                )
-                            }"
+                            "https://www.google.com/maps/search/${intent.getStringExtra("address")}"
                         )
                     )
                     .setShareHashtag(
                         ShareHashtag.Builder()
                             .setHashtag("#Carpoolers").build()
                     )
+                    .setQuote("Join me at Carpoolers to meet others needing a travel mate! you can find me here.")
                     .build()
                 shareDialog.show(shareLinkContent)
             }

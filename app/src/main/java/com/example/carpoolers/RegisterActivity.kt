@@ -61,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun CharSequence?.isValidPhoneNumber() =
-        !isNullOrEmpty() && this.matches(Regex("^[+]?[0-9]{8,20}$"))
+        !isNullOrEmpty() && this.length > 8
 
     fun isEnteredCorrectly() {
         if (first.text.toString() != "" && second.text.toString() != "") {

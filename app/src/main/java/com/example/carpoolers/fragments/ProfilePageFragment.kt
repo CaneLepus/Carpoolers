@@ -126,6 +126,7 @@ class ProfilePageFragment : Fragment() {
         }
         shareButton.setOnClickListener {
             val intent = Intent(context, FacebookActivity::class.java)
+            intent.putExtra("address", address.text.toString())
             startActivity(intent)
         }
 
