@@ -41,9 +41,9 @@ import kotlin.properties.Delegates
 
 
 /**
- * @author Shmonn<3
  * This class handles the profile page where you can change information, profile picture etc.
  * modded by FELIX xD
+ * @author Shmonn<3
  */
 
 class ProfilePageFragment : Fragment() {
