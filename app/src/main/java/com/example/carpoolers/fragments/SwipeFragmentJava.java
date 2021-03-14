@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.carpoolers.R;
+import com.example.carpoolers.Singleton;
 import com.example.carpoolers.SwipeFunction.Adapter;
 import com.example.carpoolers.SwipeFunction.Model;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +26,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.protobuf.Any;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,28 +77,49 @@ public class SwipeFragmentJava extends Fragment {
         final int[] counter = {1};
 
 
-
 //        int count = Integer.parseInt((rooms.document().getId()));
 
 
         button = v.findViewById(R.id.imageViewLike);
         //button2 = v.findViewById(R.id.)
         button.setOnClickListener(v0 -> {
-            //Intent intent = new Intent(getActivity(), ChatLogActivity.class).putExtra("roomID", "1001");
-            //startActivity(intent);
+            rooms.get()
+                    .addOnSuccessListener(result -> {
+                        long largest = 0;
+                        for (DocumentSnapshot document : result) {
+                            if (document.getLong("roomNumber") > largest) {
+                                largest = document.getLong("roomNumber");
+                            }
+                        }
+                        Map<Object, Object> myMap = createMap(auth.getCurrentUser().getUid(), models.get(currentPos).getUid(), ++largest);
+                        rooms.document().set(myMap);
+                        Toast.makeText(getContext(), "Liked! A chat request has been sent", Toast.LENGTH_LONG).show();
+                    });
+            users.document(auth.getCurrentUser().getUid())
+                    .get()
+                    .addOnSuccessListener(result -> {
+                        ArrayList<String> temp = new ArrayList<>();
+                       if (result.get("roomsWith") != null){
+                           temp = (ArrayList<String>) result.get("roomsWith");
+                       }
+                        temp.add(models.get(currentPos).getUid());
+                        Map<Object, Object> data = new HashMap();
+                        data.put("roomsWith", temp);
+                        users.document(auth.getCurrentUser().getUid()).set(data, SetOptions.merge());
+                    });
+            users.document(models.get(currentPos).getUid())
+                    .get()
+                    .addOnSuccessListener(result -> {
+                        ArrayList<String> temp = new ArrayList<>();
+                        if (result.get("roomsWith") != null){
+                            temp = (ArrayList<String>) result.get("roomsWith");
 
-            //    Map<Any, Any> roomStore = Map.of(
-            //          "user1", auth.getCurrentUser().getUid(),
-            //        "user2", models.get(currentPos).getUid());
-
-            Map<Object, Object> myMap = createMap(auth.getCurrentUser().getUid(), models.get(currentPos).getUid());
-
-            Log.d("TAG", "User id: ${user.uid}");
-            v0.setBackgroundColor(Color.BLACK);
-
-            Toast.makeText(getContext(), "Liked! A chat request has been sent", Toast.LENGTH_LONG);
-
-            //rooms.document(String.valueOf(count++)).set(myMap);
+                        }
+                        temp.add(auth.getCurrentUser().getUid());
+                        Map<Object, Object> data = new HashMap();
+                        data.put("roomsWith", temp);
+                        users.document(models.get(currentPos).getUid()).set(data, SetOptions.merge());
+                    });
         });
 
         colors = new Integer[]{
@@ -116,12 +140,16 @@ public class SwipeFragmentJava extends Fragment {
                 getResources().getColor(R.color.color3),
                 getResources().getColor(R.color.color4)
         };
+        db.collection("users").document(auth.getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(document -> {
+                    initList(document.getDouble("latitude"), document.getDouble("longitude"));
+                });
 
-        initList();
 
     }
-    private void initList(){
-        List<String> cities = new ArrayList<>();
+
+    private void initList(double userLat, double userLong) {
         models = new ArrayList<>();
         View v = getView();
         adapter = new Adapter(models, getContext());
@@ -142,6 +170,7 @@ public class SwipeFragmentJava extends Fragment {
                                     colors[position + 1]
                             )
                     );
+
                 } else {
                     viewPager.setBackgroundColor(colors[colors.length - 1]);
                 }
@@ -159,11 +188,12 @@ public class SwipeFragmentJava extends Fragment {
 
             }
         });
-        listenForUpdates();
+
+        listenForUpdates(userLat, userLong);
 
     }
 
-    private void listenForUpdates() {
+    private void listenForUpdates(double userLat, double userLong) {
 
 
         db.collection("users")
@@ -173,39 +203,73 @@ public class SwipeFragmentJava extends Fragment {
                         return;
                     }
                     models.clear();
+                    button.setVisibility(View.INVISIBLE);
                     for (DocumentSnapshot document : value) {
                         String uid = document.getId();
+                        double latitude = document.getDouble("latitude");
+                        double longitude = document.getDouble("longitude");
+                        ArrayList<String> mates = (ArrayList<String>) document.get("roomsWith");
+                        if (mates == null){
+                            mates = new ArrayList<String>();
+                        }
 
-                        if (!uid.equals(auth.getCurrentUser().getUid())) {
 
-                            firstName = (String) document.get("first");
-                            lastName = document.get("last").toString();
-                            bio = document.get("biography").toString();
+                        if (auth.getCurrentUser() != null) {
+                            if (!uid.equals(auth.getCurrentUser().getUid()) && !mates.contains(auth.getCurrentUser().getUid())) {
+                                if (distance(userLat, userLong, latitude, longitude) < 10) {
 
-                            ArrayList<Number> ratings = (ArrayList<Number>) document.get("rating");
-                            Float rating = 0.0f;
+                                    firstName = (String) document.get("first");
+                                    lastName = document.get("last").toString();
+                                    bio = document.get("biography").toString();
 
-                            for (Number item : ratings) {
-                                Float it = item.floatValue();
-                                rating += it;
+                                    ArrayList<Number> ratings = (ArrayList<Number>) document.get("rating");
+                                    Float rating = 0.0f;
+
+                                    for (Number item : ratings) {
+                                        Float it = item.floatValue();
+                                        rating += it;
+                                    }
+                                    rating /= ratings.size();
+                                    models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating));
+                                    button.setVisibility(View.VISIBLE);
+
+
+                                }
                             }
-                            rating /= ratings.size();
-
-                            models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating));
                         }
                     }
-                    Log.d("TAG", "update recieved");
+                    Log.d("TAG", "update recieved " + models.size());
                     Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
                 });
     }
 
 
-    private static Map<Object, Object> createMap(String user1, String user2) {
+    private static Map<Object, Object> createMap(String user1, String user2, long roomNumber) {
         Map<Object, Object> myMap = new HashMap<>();
         myMap.put("user1", user1);
         myMap.put("user2", user2);
-        myMap.put("chatAlive", false);
+        myMap.put("roomNumber", roomNumber);
         return myMap;
+    }
+
+    private double distance(double lat1, double lng1, double lat2, double lng2) {
+
+        double earthRadius = 6371; // in kilometers
+
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double dist = earthRadius * c;
+
+        return dist; // output distance, in kilometers
     }
 
 }

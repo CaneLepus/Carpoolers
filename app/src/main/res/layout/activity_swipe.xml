@@ -30,6 +30,7 @@
         android:layout_height="64dp"
         android:layout_marginBottom="0dp"
         android:background="@drawable/ic_check"
+        android:visibility="invisible"
         android:paddingLeft="30dp"
         android:paddingRight="30dp" />
 
@@ -40,6 +41,7 @@
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/imageViewLike"
+        android:visibility="invisible"
         android:layout_marginBottom="0dp"
         android:background="@drawable/ic_decline"
         android:paddingLeft="30dp"
