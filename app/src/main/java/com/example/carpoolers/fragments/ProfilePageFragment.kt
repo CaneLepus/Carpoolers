@@ -41,9 +41,9 @@ import kotlin.properties.Delegates
 
 
 /**
- * @author Shmonn<3
  * This class handles the profile page where you can change information, profile picture etc.
  * modded by FELIX xD
+ * @author Shmonn<3
  */
 
 class ProfilePageFragment : Fragment() {
@@ -344,24 +344,6 @@ class ProfilePageFragment : Fragment() {
         }
     }
 
-    private fun updateInfo(imageUri: Uri){
-        val changeRequest = UserProfileChangeRequest.Builder()
-            .setPhotoUri(imageUri)
-        auth.currentUser.updateProfile(changeRequest.build())
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful){
-                    Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
-                    Toast.makeText(context, "Picture updated", Toast.LENGTH_SHORT).show()
-                    Thread.sleep(3000)
-                    initProfile()
-                } else if(task.isCanceled){
-                    Toast.makeText(context, "Picture update failed/cancelled", Toast.LENGTH_LONG).show()
-                    initProfile()
-                }
-            }
-    }
-
-
     private fun deleteAction() {
         var tempuid = auth.currentUser.uid
         AlertDialog.Builder(context)
@@ -373,9 +355,6 @@ class ProfilePageFragment : Fragment() {
 
                     auth.currentUser.delete().addOnSuccessListener {
                         Toast.makeText(context, "Account deleted", Toast.LENGTH_SHORT).show()
-                        //TODO: se till att ta bort profilbilden också
-
-
                         val photoRef: StorageReference =
                             storage.getReference("images/$tempuid")
 
