@@ -221,7 +221,6 @@ class ProfilePageFragment : Fragment() {
         if (auth.currentUser != null){
             path = "images/" + auth.currentUser.uid
         }
-        Toast.makeText(context, path, Toast.LENGTH_LONG).show()
 
         val storageReference : StorageReference = FirebaseStorage.getInstance().reference.child(path)
 

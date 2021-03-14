@@ -216,7 +216,7 @@ public class SwipeFragmentJava extends Fragment {
 
                         if (auth.getCurrentUser() != null) {
                             if (!uid.equals(auth.getCurrentUser().getUid()) && !mates.contains(auth.getCurrentUser().getUid())) {
-                                if (distance(userLat, userLong, latitude, longitude) < 10) {
+                                if (distance(userLat, userLong, latitude, longitude) < Singleton.INSTANCE.getSwipeDistance()) {
 
                                     firstName = (String) document.get("first");
                                     lastName = document.get("last").toString();
