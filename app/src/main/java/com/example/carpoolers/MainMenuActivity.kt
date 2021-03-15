@@ -17,7 +17,7 @@ class MainMenuActivity : AppCompatActivity() {
     private fun setUpTabs(){
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(MainMenuFragment(), "")
-        adapter.addFragment(SwipeFragmentJava(), "Swipe")
+        adapter.addFragment(SwipeFragmentJava(), "")
         adapter.addFragment(ChatsFragment(), "")
         adapter.addFragment(ProfilePageFragment(), "")
         adapter.addFragment(SettingsFragment(), "")
@@ -28,6 +28,7 @@ class MainMenuActivity : AppCompatActivity() {
         tabs.getTabAt(0)!!.setIcon(R.drawable.ic_action_name)
         tabs.getTabAt(4)!!.setIcon(R.drawable.ic_baseline_settings_24)
         tabs.getTabAt(3)!!.setIcon(R.drawable.ic_baseline_person_24)
-        tabs.getTabAt(2)!!.setIcon(R.drawable.ic_baseline_people_24)
+        tabs.getTabAt(2)!!.setIcon(R.drawable.ic_baseline_chat_24)
+        tabs.getTabAt(1)!!.setIcon(R.drawable.ic_baseline_people_24)
     }
 }

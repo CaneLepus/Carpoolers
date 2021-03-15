@@ -118,6 +118,7 @@ public class SwipeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+
         colors = new Integer[]{
                 getResources().getColor(R.color.color1),
                 getResources().getColor(R.color.color2),
