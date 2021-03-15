@@ -69,7 +69,7 @@ public class SwipeActivity extends AppCompatActivity {
                         rating /= ratings.size();
 
 
-                            models.add(new Model("images/"+uid+".jpg",uid ,  firstName + " " + lastName, "" + bio, rating));
+                            models.add(new Model("images/"+uid+".jpg",uid ,  firstName + " " + lastName, "" + bio, rating, 0.0));
                             Log.i("MAGMA v3 debug>>", "Image URL: image/" + uid);
 
                     }

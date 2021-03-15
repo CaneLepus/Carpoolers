@@ -6,13 +6,15 @@ public class Model {
     private String desc;
     private Float rating;
     private String uid;
+    private Double dist;
 
-    public Model(String image, String uid, String title, String desc, Float rating) {
+    public Model(String image, String uid, String title, String desc, Float rating, Double dist) {
         this.image = image;
         this.title = title;
         this.desc = desc;
         this.rating = rating;
         this.uid = uid;
+        this.dist = dist;
     }
 
     public String getImage() {
@@ -42,4 +44,8 @@ public class Model {
     public float getRating(){return rating;}
 
     public String getUid(){return uid;}
+
+    public Double getDist(){return dist;}
+
+    public void setDist(Double dist){this.dist = dist;}
 }

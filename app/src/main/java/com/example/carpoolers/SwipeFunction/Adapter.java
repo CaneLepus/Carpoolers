@@ -1,5 +1,6 @@
 package com.example.carpoolers.SwipeFunction;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,10 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.example.carpoolers.R;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -45,22 +43,24 @@ public class Adapter extends PagerAdapter {
         return view.equals(object);
     }
 
+    @SuppressLint("DefaultLocale")
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.swipe_item, container, false);
+        View view = layoutInflater.inflate(R.layout.activity_swipe_profile_basic, container, false);
 
 
 
         ImageView imageView;
-        TextView title, desc;
+        TextView title, desc, distance;
         RatingBar ratingBar;
 
         imageView = view.findViewById(R.id.image);
         title = view.findViewById(R.id.title);
         desc = view.findViewById(R.id.desc);
         ratingBar = view.findViewById(R.id.ratingBar);
+        distance = view.findViewById(R.id.distance);
 
             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(models.get(position).getImage());
 
@@ -84,12 +84,16 @@ public class Adapter extends PagerAdapter {
         title.setText(models.get(position).getTitle());
         desc.setText(models.get(position).getDesc());
         ratingBar.setRating(models.get(position).getRating());
+        distance.setText(String.format("%.1f km", models.get(position).getDist()));
 
         view.setOnClickListener(v -> {
             Intent intent = new Intent(context, TemporaryProfileActivity.class);
-            intent.putExtra("param", models.get(position).getTitle());
+            intent.putExtra("title", models.get(position).getTitle());
             intent.putExtra("rating", models.get(position).getRating());
+            intent.putExtra("desc", models.get(position).getDesc());
             intent.putExtra("uid", models.get(position).getUid());
+            intent.putExtra("image", models.get(position).getImage());
+            intent.putExtra("dist", models.get(position).getDist());
             context.startActivity(intent);
             //finish();
         });

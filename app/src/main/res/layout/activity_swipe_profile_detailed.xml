@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SwipeFunction.TemporaryProfileActivity">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_profilepic" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:textColor="#262626"
+            android:textStyle="bold"
+            android:layout_below="@id/imageView"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="16dp"
+            android:text="profile_name"
+            android:textSize="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:id="@+id/tvDistance"
+            android:textColor="#262626"
+            android:layout_below="@id/imageView"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="16dp"
+            android:text="distance"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvDesc"
+            android:layout_below="@id/tvTitle"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:maxLines="10"
+            android:drawablePadding="10dp"
+            android:textSize="16dp"
+            android:ellipsize="end"
+            android:text="description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:isIndicator="true"
+            android:clickable="false"
+            android:longClickable="false"
+            android:stepSize="0.5"/>
+
+
+</RelativeLayout>

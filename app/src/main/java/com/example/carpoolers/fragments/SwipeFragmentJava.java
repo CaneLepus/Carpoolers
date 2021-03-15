@@ -230,7 +230,7 @@ public class SwipeFragmentJava extends Fragment {
                                         rating += it;
                                     }
                                     rating /= ratings.size();
-                                    models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating));
+                                    models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating, distance(userLat, userLong, latitude, longitude)));
                                     button.setVisibility(View.VISIBLE);
 
 
