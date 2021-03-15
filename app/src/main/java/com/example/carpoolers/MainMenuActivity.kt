@@ -30,5 +30,6 @@ class MainMenuActivity : AppCompatActivity() {
         tabs.getTabAt(3)!!.setIcon(R.drawable.ic_baseline_person_24)
         tabs.getTabAt(2)!!.setIcon(R.drawable.ic_baseline_chat_24)
         tabs.getTabAt(1)!!.setIcon(R.drawable.ic_baseline_people_24)
+        //hej
     }
 }
