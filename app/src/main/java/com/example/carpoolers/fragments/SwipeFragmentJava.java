@@ -1,14 +1,17 @@
 package com.example.carpoolers.fragments;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.animation.ArgbEvaluator;
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -67,7 +70,6 @@ public class SwipeFragmentJava extends Fragment {
         return view;
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -81,10 +83,13 @@ public class SwipeFragmentJava extends Fragment {
 
 
         button = v.findViewById(R.id.imageViewLike);
+
         //button2 = v.findViewById(R.id.)
         button.setOnClickListener(v0 -> {
             rooms.get()
                     .addOnSuccessListener(result -> {
+
+
                         long largest = 0;
                         for (DocumentSnapshot document : result) {
                             if (document.getLong("roomNumber") > largest) {

@@ -14,11 +14,13 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
+            app:tabIconTint="@drawable/color_sel"
+            app:tabIndicatorColor="@color/selected_color"
+            app:tabTextColor="@color/black"
+            app:tabSelectedTextColor="@color/red"
             android:layout_height="50dp"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/black"
-            android:layout_gravity="bottom"
-            app:tabIndicator="@color/colorDarkGray">
+            android:layout_gravity="bottom">
         </com.google.android.material.tabs.TabLayout>
 
 </com.example.carpoolers.CustomViewPager>
