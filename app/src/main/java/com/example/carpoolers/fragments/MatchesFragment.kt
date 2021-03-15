@@ -102,6 +102,16 @@ class MatchesFragment : Fragment() {
                         recyclerViewChats.adapter?.notifyDataSetChanged()
                     }
             }
+        val list = ArrayList<String>()
+        list.add(auth.currentUser.uid)
+        for (user in matches){
+            list.add(user.uid)
+        }
+        db.collectionGroup("messages")
+            .addSnapshotListener { value, error ->
+                Log.d("TAG", "update to messages received")
+                recyclerViewChats.adapter?.notifyDataSetChanged()
+            }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
