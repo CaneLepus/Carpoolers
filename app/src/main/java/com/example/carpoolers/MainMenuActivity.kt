@@ -1,7 +1,7 @@
 package com.example.carpoolers
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.carpoolers.TabLayoutAdapter.ViewPagerAdapter
 import com.example.carpoolers.fragments.*
 import kotlinx.android.synthetic.main.activity_mainmenu.*
@@ -14,9 +14,9 @@ class MainMenuActivity : AppCompatActivity() {
         setUpTabs()
     }
 
-    private fun setUpTabs(){
+    private fun setUpTabs() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(MainMenuFragment(), "")
+        adapter.addFragment(HomeFragment(), "")
         adapter.addFragment(SwipeFragmentJava(), "")
         adapter.addFragment(MatchesFragment(), "")
         adapter.addFragment(ProfilePageFragment(), "")

@@ -23,10 +23,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.carpoolers.*
-import com.example.carpoolers.FacebookActivity
-import com.example.carpoolers.MainActivity
-import com.example.carpoolers.R
-import com.example.carpoolers.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -96,7 +92,7 @@ class ProfilePageFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        var v : View? = view
+        var v: View? = view
 
 
 
@@ -147,7 +143,8 @@ class ProfilePageFragment : Fragment() {
             long = document.getDouble("longitude")!!
             address.text = geocoder.getFromLocation(lat, long, 1)[0].getAddressLine(0)
             //profilePic.setImageURI(auth.currentUser.photoUrl)
-            displayName.text = auth.currentUser.displayName
+            displayName.text =
+                document.get("first").toString() + " " + document.get("last").toString()
             passWordField.hint = "Update password"
 
             firstName = first.text.toString()
@@ -214,30 +211,29 @@ class ProfilePageFragment : Fragment() {
         }
     }
 
-    private fun test(){
+    private fun test() {
         // Points to the root reference
-        var path : String = ""
+        var path: String = ""
 
-        if (auth.currentUser != null){
+        if (auth.currentUser != null) {
             path = "images/" + auth.currentUser.uid
         }
 
-        val storageReference : StorageReference = FirebaseStorage.getInstance().reference.child(path)
+        val storageReference: StorageReference = FirebaseStorage.getInstance().reference.child(path)
 
         try {
-            var file : File = File.createTempFile("test", "jpg")
+            var file: File = File.createTempFile("test", "jpg")
             storageReference.getFile(file)
                 .addOnSuccessListener {
 
-                    var bitmap : Bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                    var bitmap: Bitmap = BitmapFactory.decodeFile(file.absolutePath)
                     profilePic.setImageBitmap(bitmap)
 
                 }
-        }catch (e: IOException){
+        } catch (e: IOException) {
             Log.i("Debug", "Profile picture failed to load.")
         }
     }
-
 
 
     private fun update() {
@@ -247,7 +243,8 @@ class ProfilePageFragment : Fragment() {
         if (first.text.toString() != firstName || last.text.toString() != lastName
             || phone.text.toString() != phoneNumber || bio.text.toString() != biography
             || emailInputWindow.text.toString() != email
-            || address.text.toString() != addressString) {
+            || address.text.toString() != addressString
+        ) {
 
             val changeRequest = UserProfileChangeRequest.Builder()
                 .setDisplayName(first.text.toString() + " " + last.text.toString())
@@ -275,29 +272,29 @@ class ProfilePageFragment : Fragment() {
             profile = true
         }
 
-        if(!passWordField.text.isNullOrEmpty()){
+        if (!passWordField.text.isNullOrEmpty()) {
             auth.currentUser.updatePassword(passWordField.text.toString())
             pass = true
         }
 
-        if(checkBox.isChecked){
+        if (checkBox.isChecked) {
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
 
         }
 
-        if(profile && !pass){
+        if (profile && !pass) {
             Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
             Toast.makeText(context, "Profile updated", Toast.LENGTH_SHORT).show()
             Thread.sleep(3000)
             initProfile()
-        } else if(profile && pass){
+        } else if (profile && pass) {
             Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
             Toast.makeText(context, "Profile updated", Toast.LENGTH_SHORT).show()
             Toast.makeText(context, "Password updated", Toast.LENGTH_SHORT).show()
             Thread.sleep(3000)
             initProfile()
-        } else if (!profile && pass){
+        } else if (!profile && pass) {
             Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
             Toast.makeText(context, "Password updated", Toast.LENGTH_SHORT).show()
             Thread.sleep(3000)
@@ -308,7 +305,7 @@ class ProfilePageFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == pickImage){
+        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == pickImage) {
             val imageUri = data?.data
             if (imageUri != null) {
                 //updateInfo()
@@ -388,7 +385,7 @@ class ProfilePageFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                        val intent = Intent(context, MainActivity::class.java)
+                        val intent = Intent(context, LoginActivity::class.java)
                         startActivity(intent)
                     }.addOnFailureListener {
                         Toast.makeText(context, "Account deletion failed", Toast.LENGTH_SHORT)
@@ -398,8 +395,6 @@ class ProfilePageFragment : Fragment() {
             .setNegativeButton("No", null)
             .show()
     }
-
-
 
 
 }

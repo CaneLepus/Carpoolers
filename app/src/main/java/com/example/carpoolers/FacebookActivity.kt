@@ -1,8 +1,6 @@
 package com.example.carpoolers
 
 
-
-
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -17,7 +15,6 @@ import com.facebook.login.LoginResult
 import com.facebook.share.Sharer
 import com.facebook.share.model.ShareHashtag
 import com.facebook.share.model.ShareLinkContent
-import com.facebook.share.widget.ShareButton
 import com.facebook.share.widget.ShareDialog
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -29,7 +26,7 @@ class FacebookActivity : AppCompatActivity() {
     lateinit var callbackManager: CallbackManager
     lateinit var shareDialog: ShareDialog
     lateinit var loginManager: LoginManager
-    val db =  Firebase.firestore
+    val db = Firebase.firestore
     val auth = Firebase.auth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,23 +37,19 @@ class FacebookActivity : AppCompatActivity() {
         callbackManager = CallbackManager.Factory.create()
         loginManager = LoginManager.getInstance()
         shareDialog = ShareDialog(this)
-        // If you are using in a fragment, call loginButton.setFragment(this);
 
-        // Callback registration
-        // If you are using in a fragment, call loginButton.setFragment(this);
 
-        // Callback registration
+        // sets actions depending on callback for the login process
         loginManager.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
             override fun onSuccess(loginResult: LoginResult?) {
                 Log.d("TAG", "facebook login success")
             }
 
             override fun onCancel() {
-                // App code
+                finish()
             }
 
             override fun onError(exception: FacebookException) {
-                // App code
             }
         })
         val accessToken = AccessToken.getCurrentAccessToken()
@@ -64,6 +57,7 @@ class FacebookActivity : AppCompatActivity() {
         if (!isLoggedIn) {
             loginManager.logIn(this, Arrays.asList("email"))
         }
+//        sets actions depending on callback for the share function
         shareDialog.registerCallback(callbackManager, object : FacebookCallback<Sharer.Result?> {
             override fun onSuccess(shareResult: Sharer.Result?) {
                 Log.d("TAG", "facebook share success")
@@ -79,26 +73,20 @@ class FacebookActivity : AppCompatActivity() {
                 // App code
             }
         })
-        db.collection("users").document(auth.currentUser.uid)
-            .get()
-            .addOnSuccessListener { result ->
-                val shareLinkContent = ShareLinkContent.Builder()
-                    .setContentUrl(
-                        Uri.parse(
-                            "https://www.google.com/maps/search/${intent.getStringExtra("address")}"
-                        )
-                    )
-                    .setShareHashtag(
-                        ShareHashtag.Builder()
-                            .setHashtag("#Carpoolers").build()
-                    )
-                    .setQuote("Join me at Carpoolers to meet others needing a travel mate! you can find me here.")
-                    .build()
-                shareDialog.show(shareLinkContent)
-            }
-
-
-
+//        sets the content of the share and displays it to the user
+        val shareLinkContent = ShareLinkContent.Builder()
+            .setContentUrl(
+                Uri.parse(
+                    "https://www.google.com/maps/search/${intent.getStringExtra("address")}"
+                )
+            )
+            .setShareHashtag(
+                ShareHashtag.Builder()
+                    .setHashtag("#Carpoolers").build()
+            )
+            .setQuote("Join me at Carpoolers to meet others needing a travel mate! you can find me here.")
+            .build()
+        shareDialog.show(shareLinkContent)
 
 
     }

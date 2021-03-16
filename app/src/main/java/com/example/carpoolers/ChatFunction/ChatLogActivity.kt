@@ -1,26 +1,19 @@
 package com.example.carpoolers.ChatFunction
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.carpoolers.R
-import com.example.carpoolers.User
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.ListenerRegistration
-import com.xwray.groupie.GroupieAdapter
-import com.xwray.groupie.GroupieViewHolder
-import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import java.util.*
-
 import kotlin.collections.ArrayList
 
 
@@ -49,6 +42,7 @@ class ChatLogActivity : AppCompatActivity() {
             sendMessage()
         }
     }
+
     private fun initList() {
         if (auth.currentUser.uid == null)
             return
@@ -66,14 +60,17 @@ class ChatLogActivity : AppCompatActivity() {
         //val toID =
         if (roomID != null) {
             firestore.collection("rooms").document(roomID).collection("messages")
-                .add(mapOf(
-                    Pair("text", text),
-                    Pair("user", fromID),
-                    Pair("timestamp", Timestamp.now())
-                ))
+                .add(
+                    mapOf(
+                        Pair("text", text),
+                        Pair("user", fromID),
+                        Pair("timestamp", Timestamp.now())
+                    )
+                )
         }
 
     }
+
     private fun listenForChatMessages() {
         val roomId = intent.getStringExtra("roomID")
         if (roomId == null) {
@@ -95,13 +92,15 @@ class ChatLogActivity : AppCompatActivity() {
                             messageDocument["text"] as String,
                             messageDocument["user"] as String,
                             timeStamp.toDate()
-                        ))
+                        )
+                    )
                 }
                 chatMessages.sortBy { it.timeStamp }
                 chatLogRecyclerView.adapter?.notifyDataSetChanged()
             }
 
     }
+
     override fun onDestroy() {
         chatRegistration?.remove()
         super.onDestroy()

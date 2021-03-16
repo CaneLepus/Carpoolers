@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -18,24 +18,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity android:name=".FacebookActivity"></activity>
-        <activity android:name=".ChatFunction.PreviousChatsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
         <activity android:name=".ChatFunction.ChatLogActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ChatFunction.PreviousChatsActivity" />
         </activity>
-        <activity android:name=".ProfilePage" />
-        <activity android:name=".SwipeFunction.SwipeActivity" />
-        <activity android:name=".SwipeFunction.TemporaryProfileActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".SwipeFunction.SwipeProfileDetailedActivity" />
         <activity android:name=".RatingActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainMenuActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

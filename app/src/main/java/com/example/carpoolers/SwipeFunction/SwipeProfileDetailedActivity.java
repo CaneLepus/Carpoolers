@@ -1,24 +1,24 @@
 package com.example.carpoolers.SwipeFunction;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.carpoolers.R;
 import com.example.carpoolers.Rate;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
 
 
-public class TemporaryProfileActivity extends AppCompatActivity {
+public class SwipeProfileDetailedActivity extends AppCompatActivity {
 
     Rate ra = new Rate();
 
@@ -66,7 +66,7 @@ public class TemporaryProfileActivity extends AppCompatActivity {
     }
 
 
-    void rate(Float rating){
+    void rate(Float rating) {
         ra.setRating(getApplicationContext(), getIntent().getStringExtra("uid"), rating);
     }
 

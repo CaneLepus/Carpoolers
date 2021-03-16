@@ -17,36 +17,36 @@ class RatingActivity : AppCompatActivity() {
     val db = Firebase.firestore
     val auth = Firebase.auth
     private val users = db.collection("users")
-    var arrList : ArrayList<Number> = ArrayList()
+    var arrList: ArrayList<Number> = ArrayList()
     var finalRating = 0.0
 
 
-    val ratings : ArrayList<Double> = ArrayList()
+    val ratings: ArrayList<Double> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rating)
 
-        var rating : RatingBar = findViewById(R.id.ratingBar)
-        var button : Button = findViewById(R.id.button)
+        var rating: RatingBar = findViewById(R.id.ratingBar)
+        var button: Button = findViewById(R.id.button)
 
 
         Log.d("-----------------", arrList.toString())
 
         //rating.rating= finalRating.toFloat() //this is gonna need to get db value later
 
-        button.setOnClickListener{test()}
+        button.setOnClickListener { test() }
     }
 
 
-    fun getRatingsFromDb(uid : String, rating : Float) {
+    fun getRatingsFromDb(uid: String, rating: Float) {
 
         val query = users.document(uid)
 
         query.get().addOnSuccessListener { document ->
             arrList = document.get("rating") as ArrayList<Number>
 
-            for(item in arrList){
+            for (item in arrList) {
                 val it: Float = item.toFloat()
                 finalRating += it
             }
@@ -61,29 +61,28 @@ class RatingActivity : AppCompatActivity() {
 
 
             Toast.makeText(
-                    this, arrList.toString(),
-                    Toast.LENGTH_SHORT
+                this, arrList.toString(),
+                Toast.LENGTH_SHORT
             ).show()
 
         }.addOnFailureListener {
             Toast.makeText(
-                    this, "Rating could not be initialized",
-                    Toast.LENGTH_SHORT
+                this, "Rating could not be initialized",
+                Toast.LENGTH_SHORT
             ).show()
         }
 
     }
 
-    fun rateUser(){
+    fun rateUser() {
 
     }
 
-    private fun test(){
-
+    private fun test() {
 
 
         //Toast.makeText(this, "You gave a rating of " + rating.rating + " stars", Toast.LENGTH_LONG).show()
         //Log.i(".RatingActivity","Rating given: " + rating.rating)
 
     }
-    }
+}

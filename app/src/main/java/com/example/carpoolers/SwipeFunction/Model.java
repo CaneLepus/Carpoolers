@@ -41,11 +41,19 @@ public class Model {
         this.desc = desc;
     }
 
-    public float getRating(){return rating;}
+    public float getRating() {
+        return rating;
+    }
 
-    public String getUid(){return uid;}
+    public String getUid() {
+        return uid;
+    }
 
-    public Double getDist(){return dist;}
+    public Double getDist() {
+        return dist;
+    }
 
-    public void setDist(Double dist){this.dist = dist;}
+    public void setDist(Double dist) {
+        this.dist = dist;
+    }
 }

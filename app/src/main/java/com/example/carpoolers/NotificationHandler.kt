@@ -17,7 +17,7 @@ import com.google.firebase.messaging.RemoteMessage
  * notifications by simply calling the sendLocalNotification()-method
  * @author Shmonn<3
  */
-class NotificationHandler: FirebaseMessagingService() {
+class NotificationHandler : FirebaseMessagingService() {
     private val channelID = "channelMAIN"
 
     override fun onCreate() {
@@ -35,18 +35,23 @@ class NotificationHandler: FirebaseMessagingService() {
      */
     fun getToken(): String {
         var returnToken = "fcm key not implemented"
-        val snapshot = FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w("NEW TOKEN FAILED", "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-            // Get new FCM registration token
-            val token = task.result
+        val snapshot =
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(
+                        "NEW TOKEN FAILED",
+                        "Fetching FCM registration token failed",
+                        task.exception
+                    )
+                    return@OnCompleteListener
+                }
+                // Get new FCM registration token
+                val token = task.result
 
-            Log.d("CURRENT TOKEN", "$token")
-        })
+                Log.d("CURRENT TOKEN", "$token")
+            })
         Thread.sleep(2000)
-        if(snapshot.isComplete){
+        if (snapshot.isComplete) {
             returnToken = "${snapshot.result}"
         }
 
@@ -75,7 +80,7 @@ class NotificationHandler: FirebaseMessagingService() {
 
     }
 
-     private fun createNotificationChannel(CHANNEL_ID: String) {
+    private fun createNotificationChannel(CHANNEL_ID: String) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -87,7 +92,7 @@ class NotificationHandler: FirebaseMessagingService() {
             }
             // Register the channel with the system
             val notificationManager: NotificationManager =
-                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
@@ -96,11 +101,13 @@ class NotificationHandler: FirebaseMessagingService() {
         // send notification
         // Notification ID should always be unique
         var builder = NotificationCompat.Builder(this, channelID)
-                .setSmallIcon(R.drawable.notifications_icon)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setStyle(NotificationCompat.BigTextStyle()
-                        .bigText(text))
-                .setAutoCancel(true)
+            .setSmallIcon(R.drawable.notifications_icon)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(text)
+            )
+            .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)) {
             // notificationId is a unique int for each notification that you must define
@@ -121,8 +128,10 @@ class NotificationHandler: FirebaseMessagingService() {
         var builder = NotificationCompat.Builder(context, channelID)
             .setSmallIcon(R.drawable.notifications_icon)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setStyle(NotificationCompat.BigTextStyle()
-                .bigText(text))
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(text)
+            )
             .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(context)) {

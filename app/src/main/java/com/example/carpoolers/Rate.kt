@@ -16,7 +16,7 @@ class Rate : AppCompatActivity() {
     var arrList: ArrayList<Number> = ArrayList()
     var finalRating = 0.0
 
-    fun setRating(context : Context, uid: String, rating: Float) {
+    fun setRating(context: Context, uid: String, rating: Float) {
 
         val query = users.document(uid)
 
@@ -44,7 +44,7 @@ class Rate : AppCompatActivity() {
         }
     }
 
-    fun getRating(context : Context, uid : String) : Float{
+    fun getRating(context: Context, uid: String): Float {
         val query = users.document(uid)
         var rating = 0.0f
 

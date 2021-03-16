@@ -1,21 +1,16 @@
 package com.example.carpoolers.fragments;
 
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.animation.ArgbEvaluator;
-import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.carpoolers.R;
 import com.example.carpoolers.Singleton;
@@ -25,12 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.google.protobuf.Any;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,9 +95,9 @@ public class SwipeFragmentJava extends Fragment {
                     .get()
                     .addOnSuccessListener(result -> {
                         ArrayList<String> temp = new ArrayList<>();
-                       if (result.get("roomsWith") != null){
-                           temp = (ArrayList<String>) result.get("roomsWith");
-                       }
+                        if (result.get("roomsWith") != null) {
+                            temp = (ArrayList<String>) result.get("roomsWith");
+                        }
                         temp.add(models.get(currentPos).getUid());
                         Map<Object, Object> data = new HashMap();
                         data.put("roomsWith", temp);
@@ -116,7 +107,7 @@ public class SwipeFragmentJava extends Fragment {
                     .get()
                     .addOnSuccessListener(result -> {
                         ArrayList<String> temp = new ArrayList<>();
-                        if (result.get("roomsWith") != null){
+                        if (result.get("roomsWith") != null) {
                             temp = (ArrayList<String>) result.get("roomsWith");
 
                         }
@@ -211,10 +202,16 @@ public class SwipeFragmentJava extends Fragment {
                     button.setVisibility(View.INVISIBLE);
                     for (DocumentSnapshot document : value) {
                         String uid = document.getId();
-                        double latitude = document.getDouble("latitude");
-                        double longitude = document.getDouble("longitude");
+                        double latitude = 0.0;
+                        if (document.getDouble("latitude") != null) {
+                            latitude = document.getDouble("latitude");
+                        }
+                        double longitude = 0.0;
+                        if (document.getDouble("longitude") != null) {
+                            longitude = document.getDouble("longitude");
+                        }
                         ArrayList<String> mates = (ArrayList<String>) document.get("roomsWith");
-                        if (mates == null){
+                        if (mates == null) {
                             mates = new ArrayList<String>();
                         }
 

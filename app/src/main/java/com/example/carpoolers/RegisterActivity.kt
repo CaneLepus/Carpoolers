@@ -13,12 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.facebook.CallbackManager
-import com.facebook.FacebookSdk
-import com.facebook.share.model.ShareLinkContent
-import com.facebook.share.widget.ShareDialog
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -56,13 +51,16 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    //    Called when the register button is pressed
     private fun click() {
         isEnteredCorrectly()
     }
 
+    //    Checks the format of the phone number
     fun CharSequence?.isValidPhoneNumber() =
         !isNullOrEmpty() && this.length > 8
 
+    //    method used to check that all the fields is properly filled out.
     fun isEnteredCorrectly() {
         if (first.text.toString() != "" && second.text.toString() != "") {
             if (phone.text.isValidPhoneNumber()) {
@@ -115,12 +113,12 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    //    used to upload chosen image to firebase
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             val imageUri = data?.data
             if (imageUri != null) {
-                updateInfo()
 
                 var pd = ProgressDialog(this)
                 pd.setTitle("Uploading")
@@ -155,6 +153,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    //    method that converts address to coordinates before uploading to firestore
     fun getCoordinates(): Boolean {
         try {
             val geocoder = Geocoder(this, Locale.getDefault())
@@ -170,19 +169,5 @@ class RegisterActivity : AppCompatActivity() {
             return false
         }
     }
-
-    fun updateInfo() {
-        val changeRequest = UserProfileChangeRequest.Builder()
-            .setDisplayName(first.text.toString() + " " + second.text.toString())
-        auth.currentUser.updateProfile(changeRequest.build())
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("TAG", "User displayName added")
-                }
-
-            }
-    }
-
-
 
 }

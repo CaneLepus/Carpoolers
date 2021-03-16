@@ -51,7 +51,6 @@ public class Adapter extends PagerAdapter {
         View view = layoutInflater.inflate(R.layout.activity_swipe_profile_basic, container, false);
 
 
-
         ImageView imageView;
         TextView title, desc, distance;
         RatingBar ratingBar;
@@ -62,18 +61,15 @@ public class Adapter extends PagerAdapter {
         ratingBar = view.findViewById(R.id.ratingBar);
         distance = view.findViewById(R.id.distance);
 
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(models.get(position).getImage());
-
-
-
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(models.get(position).getImage());
 
 
         try {
             File file = File.createTempFile("test", "jpg");
             storageReference.getFile(file).addOnSuccessListener(taskSnapshot -> {
-                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                imageView.setImageBitmap(bitmap);
-            }
+                        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                        imageView.setImageBitmap(bitmap);
+                    }
 
             );
         } catch (IOException e) {
@@ -87,7 +83,7 @@ public class Adapter extends PagerAdapter {
         distance.setText(String.format("%.1f km", models.get(position).getDist()));
 
         view.setOnClickListener(v -> {
-            Intent intent = new Intent(context, TemporaryProfileActivity.class);
+            Intent intent = new Intent(context, SwipeProfileDetailedActivity.class);
             intent.putExtra("title", models.get(position).getTitle());
             intent.putExtra("rating", models.get(position).getRating());
             intent.putExtra("desc", models.get(position).getDesc());
@@ -104,13 +100,13 @@ public class Adapter extends PagerAdapter {
 
     @Override
     public int getItemPosition(@NonNull Object object) {
-            // Returning POSITION_NONE means the current data does not matches the data this fragment is showing right now.  Returning POSITION_NONE constant will force the fragment to redraw its view layout all over again and show new data.
-            return POSITION_NONE;
+        // Returning POSITION_NONE means the current data does not matches the data this fragment is showing right now.  Returning POSITION_NONE constant will force the fragment to redraw its view layout all over again and show new data.
+        return POSITION_NONE;
 
     }
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View)object);
+        container.removeView((View) object);
     }
 }
