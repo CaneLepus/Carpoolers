@@ -11,7 +11,7 @@ class MainMenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mainmenu)
-
+        applicationContext.stopService(Intent(this, NotificationService::class.java))
         setUpTabs()
     }
 

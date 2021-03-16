@@ -90,7 +90,7 @@ class MatchesFragment : Fragment() {
                                 matches.add(user)
                             }
                         }
-                        Log.d("TAG", "updating matches")
+                        Log.d("TAG", "updating matches. users: ${matches.size}")
                         if (recyclerViewChats != null){
                             recyclerViewChats.adapter?.notifyDataSetChanged()
                         }
@@ -103,7 +103,7 @@ class MatchesFragment : Fragment() {
         }
         db.collectionGroup("messages")
             .addSnapshotListener { value, error ->
-                Log.d("TAG", "update to messages received")
+                Log.d("TAG", "update to messages received users: ${matches.size}")
                 if(recyclerViewChats != null){
                     recyclerViewChats.adapter?.notifyDataSetChanged()
                 }
