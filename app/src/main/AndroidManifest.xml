@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name = "android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -33,10 +34,11 @@
         </activity>
 
         <service
-            android:name=".NotificationHandler"
-            android:stopWithTask="false">
+            android:name="com.example.carpoolers.NotificationService"
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.example.carpoolers.NotificationService" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </service>
 

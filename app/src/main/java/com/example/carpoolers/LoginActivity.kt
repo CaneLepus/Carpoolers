@@ -90,5 +90,14 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("TAG", "in onStop")
+    }
+
 }
 

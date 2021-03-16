@@ -1,5 +1,6 @@
 package com.example.carpoolers
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.carpoolers.TabLayoutAdapter.ViewPagerAdapter
@@ -30,5 +31,11 @@ class MainMenuActivity : AppCompatActivity() {
         tabs.getTabAt(2)!!.setIcon(R.drawable.ic_baseline_chat_24)
         tabs.getTabAt(3)!!.setIcon(R.drawable.ic_baseline_person_24)
         tabs.getTabAt(4)!!.setIcon(R.drawable.ic_baseline_settings_24)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        applicationContext.startService(Intent(this, NotificationService::class.java))
+
     }
 }
