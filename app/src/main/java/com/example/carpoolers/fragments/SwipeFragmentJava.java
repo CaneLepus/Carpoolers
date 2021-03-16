@@ -89,32 +89,32 @@ public class SwipeFragmentJava extends Fragment {
                         }
                         Map<Object, Object> myMap = createMap(auth.getCurrentUser().getUid(), models.get(currentPos).getUid(), ++largest);
                         rooms.document().set(myMap);
-                        Toast.makeText(getContext(), "Liked! A chat request has been sent", Toast.LENGTH_LONG).show();
-                    });
-            users.document(auth.getCurrentUser().getUid())
-                    .get()
-                    .addOnSuccessListener(result -> {
-                        ArrayList<String> temp = new ArrayList<>();
-                        if (result.get("roomsWith") != null) {
-                            temp = (ArrayList<String>) result.get("roomsWith");
-                        }
-                        temp.add(models.get(currentPos).getUid());
-                        Map<Object, Object> data = new HashMap();
-                        data.put("roomsWith", temp);
-                        users.document(auth.getCurrentUser().getUid()).set(data, SetOptions.merge());
-                    });
-            users.document(models.get(currentPos).getUid())
-                    .get()
-                    .addOnSuccessListener(result -> {
-                        ArrayList<String> temp = new ArrayList<>();
-                        if (result.get("roomsWith") != null) {
-                            temp = (ArrayList<String>) result.get("roomsWith");
+                        users.document(auth.getCurrentUser().getUid())
+                                .get()
+                                .addOnSuccessListener(snapshot -> {
+                                    ArrayList<String> temp = new ArrayList<>();
+                                    if (snapshot.get("roomsWith") != null) {
+                                        temp = (ArrayList<String>) snapshot.get("roomsWith");
+                                    }
+                                    temp.add(models.get(currentPos).getUid());
+                                    Map<Object, Object> data = new HashMap();
+                                    data.put("roomsWith", temp);
+                                    users.document(auth.getCurrentUser().getUid()).set(data, SetOptions.merge());
+                                });
+                        users.document(models.get(currentPos).getUid())
+                                .get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    ArrayList<String> temp = new ArrayList<>();
+                                    if (documentSnapshot.get("roomsWith") != null) {
+                                        temp = (ArrayList<String>) documentSnapshot.get("roomsWith");
 
-                        }
-                        temp.add(auth.getCurrentUser().getUid());
-                        Map<Object, Object> data = new HashMap();
-                        data.put("roomsWith", temp);
-                        users.document(models.get(currentPos).getUid()).set(data, SetOptions.merge());
+                                    }
+                                    temp.add(auth.getCurrentUser().getUid());
+                                    Map<Object, Object> data = new HashMap();
+                                    data.put("roomsWith", temp);
+                                    users.document(models.get(currentPos).getUid()).set(data, SetOptions.merge());
+                                });
+                        Toast.makeText(getContext(), "Liked! A chat request has been sent", Toast.LENGTH_LONG).show();
                     });
         });
 

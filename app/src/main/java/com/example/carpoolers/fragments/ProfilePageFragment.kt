@@ -33,6 +33,7 @@ import com.google.firebase.storage.StorageReference
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 
@@ -385,6 +386,37 @@ class ProfilePageFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+                        db.collection("users")
+                            .whereArrayContains("roomsWith", tempuid)
+                            .get()
+                            .addOnSuccessListener { result ->
+                                for (document in result){
+                                    var list = ArrayList<String>()
+                                    for (room in document.get("roomsWith") as ArrayList<String>){
+                                        if (room != tempuid){
+                                            list.add(room)
+                                        }
+                                    }
+                                    document.reference.update("roomsWith", list)
+                                }
+                            }
+                        db.collection("rooms")
+                            .get()
+                            .addOnSuccessListener { result ->
+                                for (document in result){
+                                    if (document.get("user1") == tempuid || document.get("user2") == tempuid){
+                                        document.reference.collection("messages")
+                                            .get()
+                                            .addOnSuccessListener { documents ->
+                                                for (document in documents){
+                                                    document.reference.delete()
+                                                }
+                                            }
+                                        document.reference.delete()
+                                    }
+                                }
+                            }
+
                         val intent = Intent(context, LoginActivity::class.java)
                         startActivity(intent)
                     }.addOnFailureListener {

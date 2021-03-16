@@ -77,7 +77,7 @@ class MatchesAdapter(val matches: List<User>) : RecyclerView.Adapter<MatchesAdap
                                     }
                                 }
                         } else if (document.get("user2").toString() == user.uid) {
-                            db.collection("messages")
+                            document.reference.collection("messages")
                                 .get()
                                 .addOnSuccessListener { doc ->
                                     if (doc.isEmpty) {
@@ -145,16 +145,6 @@ class MatchesAdapter(val matches: List<User>) : RecyclerView.Adapter<MatchesAdap
             holder.itemView.imageViewDecline.visibility = View.INVISIBLE
         }
         holder.itemView.imageViewDecline.setOnClickListener {
-            db.collection("rooms")
-                .whereIn("user1", list)
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        if (list.contains(document.get("user2").toString())) {
-                            document.reference.delete()
-                        }
-                    }
-                }
             db.collection("users")
                 .document(auth.currentUser.uid)
                 .get()
@@ -182,6 +172,16 @@ class MatchesAdapter(val matches: List<User>) : RecyclerView.Adapter<MatchesAdap
                     val data: MutableMap<Any?, Any?> = HashMap()
                     data["roomsWith"] = roomsWith
                     result.reference.set(data, SetOptions.merge())
+                }
+            db.collection("rooms")
+                .whereIn("user1", list)
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        if (list.contains(document.get("user2").toString())) {
+                            document.reference.delete()
+                        }
+                    }
                 }
         }
         val storageReference: StorageReference =

@@ -59,10 +59,10 @@ class MatchesFragment : Fragment() {
     fun listenForMatches() {
         db.collection("users").document(auth.currentUser.uid)
             .addSnapshotListener { result, e ->
+                matches.clear()
                 if (result == null || !result.exists()) {
                     return@addSnapshotListener
                 }
-                matches.clear()
                 var roomsWith = ArrayList<String>()
                 if (result.get("roomsWith") != null) {
                     roomsWith = result.get("roomsWith") as ArrayList<String>
@@ -91,7 +91,9 @@ class MatchesFragment : Fragment() {
                             }
                         }
                         Log.d("TAG", "updating matches")
-                        recyclerViewChats.adapter?.notifyDataSetChanged()
+                        if (recyclerViewChats != null){
+                            recyclerViewChats.adapter?.notifyDataSetChanged()
+                        }
                     }
             }
         val list = ArrayList<String>()
@@ -102,7 +104,9 @@ class MatchesFragment : Fragment() {
         db.collectionGroup("messages")
             .addSnapshotListener { value, error ->
                 Log.d("TAG", "update to messages received")
-                recyclerViewChats.adapter?.notifyDataSetChanged()
+                if(recyclerViewChats != null){
+                    recyclerViewChats.adapter?.notifyDataSetChanged()
+                }
             }
     }
 
