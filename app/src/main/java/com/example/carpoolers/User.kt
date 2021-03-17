@@ -15,6 +15,7 @@ data class User(
     fun storeFormat(): HashMap<Any, Any> {
 
         val rating: ArrayList<Double> = ArrayList()
+        rating.add(0.0)
 
         return hashMapOf(
             "first" to first,
