@@ -5,7 +5,7 @@
     <string name="facebook_app_id">488593148944257</string>
     <string name="fb_login_protocol_scheme">fb488593148944257</string>
     <string name="swipe_distance">%d kilometer</string>
-
+    <string name="carpoolers">Carpoolers</string>
 
 
 </resources>
