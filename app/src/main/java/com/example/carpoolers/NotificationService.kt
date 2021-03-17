@@ -6,21 +6,18 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlin.properties.Delegates
+import java.util.*
 
 
 class NotificationService : Service() {
-    val db = Firebase.firestore
-    val auth = Firebase.auth
-    var TAG = "Notifications"
-    var firstLike = true
-    var users = -1
+    var timer: Timer? = null
+    var timerTask: TimerTask? = null
+    var TAG = "Timers"
+    var Your_X_SECS = 5
 
     override fun onBind(arg0: Intent): IBinder? {
         return null
@@ -29,7 +26,7 @@ class NotificationService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.e(TAG, "onStartCommand")
         super.onStartCommand(intent, flags, startId)
-        listenForMatches()
+        startTimer()
         return START_STICKY
     }
 
@@ -39,44 +36,38 @@ class NotificationService : Service() {
 
     override fun onDestroy() {
         Log.e(TAG, "onDestroy")
+        stopTimerTask()
         super.onDestroy()
     }
+    val handler: Handler = Handler()
+    fun startTimer() {
+        timer = Timer()
+        initializeTimerTask()
+        timer!!.schedule(timerTask, 5000, Your_X_SECS * 1000.toLong()) //
+    }
 
-    fun listenForMatches() {
-        if(auth.currentUser != null) {
-            db.collection("users")
-                .document(auth.currentUser.uid)
-                .addSnapshotListener { value, error ->
-                    var newUsers = ArrayList<String>()
-                    if (value != null) {
-                        if (value.get("roomsWith") != null) {
-                                newUsers = value.get("roomsWith") as ArrayList<String>
-                            Log.e(TAG, "users: ${users}  newUsers: ${newUsers.size}")
-                            if (newUsers.size > users && users != -1){
-                                createNotification("You got a new like!")
-                            }
-                            users = newUsers.size
-
-                        }else{
-                            users = 0
-                            Log.e(TAG, "users: ${users}")
-                        }
-                    }
-                    firstLike = false
-
-                }
+    fun stopTimerTask() {
+        if (timer != null) {
+            timer!!.cancel()
+            timer = null
         }
     }
 
-
-    private fun createNotification(text: String) {
+    fun initializeTimerTask() {
+        timerTask = object : TimerTask() {
+            override fun run() {
+                handler.post(Runnable { createNotification() })
+            }
+        }
+    }
+    private fun createNotification() {
         Log.e(TAG, "createNotification")
         val mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val mBuilder =
             NotificationCompat.Builder(applicationContext, default_notification_channel_id)
         mBuilder.setContentTitle("Carpoolers")
-        mBuilder.setContentText(text)
-        mBuilder.setTicker(text)
+        mBuilder.setContentText("We miss you!")
+        mBuilder.setTicker("We miss you!")
         mBuilder.setSmallIcon(com.example.carpoolers.R.drawable.notifications_icon)
         mBuilder.setAutoCancel(true)
         val contentIntent = PendingIntent.getActivity(
