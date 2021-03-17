@@ -30,12 +30,18 @@ public class SwipeProfileDetailedActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.tvTitle);
         TextView textViewDesc = findViewById(R.id.tvDesc);
         TextView textViewDist = findViewById(R.id.tvDistance);
+        TextView textViewNumberOfRates = findViewById(R.id.tvNumberofRate);
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         ImageView imageView = findViewById(R.id.imageView);
+
+        String hej = String.valueOf(getIntent().getIntExtra("numOfRates", 0));
+
+        textViewNumberOfRates.setText("Based on " + hej + " ratings");
 
         textViewDesc.setText(getIntent().getStringExtra("desc"));
         textViewDist.setText(String.format("%.1f km", (getIntent().getDoubleExtra("dist", 0.0))));
         textView.setText(getIntent().getStringExtra("title"));
+
 
         ratingBar.setRating(getIntent().getFloatExtra("rating", 0.0f));
 

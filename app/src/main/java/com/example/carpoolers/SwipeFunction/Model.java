@@ -7,15 +7,21 @@ public class Model {
     private Float rating;
     private String uid;
     private Double dist;
+    private int numberOfRatings;
 
-    public Model(String image, String uid, String title, String desc, Float rating, Double dist) {
+    public Model(String image, String uid, String title, String desc, Float rating, int numberOfRatings, Double dist) {
         this.image = image;
         this.title = title;
         this.desc = desc;
         this.rating = rating;
         this.uid = uid;
         this.dist = dist;
+        this.numberOfRatings = numberOfRatings;
     }
+
+    public int getNumberOfRatings(){return numberOfRatings;}
+
+    public void setNumberOfRatings(int numberOfRatings){this.numberOfRatings = numberOfRatings;}
 
     public String getImage() {
         return image;

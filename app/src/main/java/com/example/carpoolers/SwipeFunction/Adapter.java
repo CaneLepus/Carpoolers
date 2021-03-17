@@ -90,6 +90,7 @@ public class Adapter extends PagerAdapter {
             intent.putExtra("uid", models.get(position).getUid());
             intent.putExtra("image", models.get(position).getImage());
             intent.putExtra("dist", models.get(position).getDist());
+            intent.putExtra("numOfRates", models.get(position).getNumberOfRatings());
             context.startActivity(intent);
             //finish();
         });

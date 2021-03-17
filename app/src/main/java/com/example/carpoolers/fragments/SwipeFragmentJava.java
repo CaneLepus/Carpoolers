@@ -43,6 +43,8 @@ public class SwipeFragmentJava extends Fragment {
     private String lastName;
     private String bio;
 
+    private int numberOfRatings = 0;
+
     private int currentPos;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -232,10 +234,11 @@ public class SwipeFragmentJava extends Fragment {
 
                                     for (Number item : ratings) {
                                         Float it = item.floatValue();
+                                        numberOfRatings++;
                                         rating += it;
                                     }
                                     rating /= ratings.size();
-                                    models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating, distance(userLat, userLong, latitude, longitude)));
+                                    models.add(new Model("images/" + uid, uid, firstName + " " + lastName, "" + bio, rating, numberOfRatings, distance(userLat, userLong, latitude, longitude)));
                                     button.setVisibility(View.VISIBLE);
 
 
