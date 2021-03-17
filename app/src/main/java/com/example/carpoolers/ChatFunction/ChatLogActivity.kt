@@ -35,7 +35,6 @@ class ChatLogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.hide()
 
         setContentView(R.layout.activity_chat_log)
         messageButton = findViewById(R.id.sendMesageButton)
@@ -46,6 +45,7 @@ class ChatLogActivity : AppCompatActivity() {
         userToRate = intent.getStringExtra("toUserID").toString()
 
 
+        supportActionBar?.show()
         supportActionBar?.title = "Chat Log"
 
         //Hämta vilken användare som är vald
