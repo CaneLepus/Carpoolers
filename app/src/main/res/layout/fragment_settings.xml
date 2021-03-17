@@ -22,7 +22,6 @@
         android:layout_above="@id/seekBar"
         android:layout_centerInParent="true"
         android:text="Swipe matching range:"
-        android:textColor="@color/black"
         android:textSize="24dp" />
 
     <TextView

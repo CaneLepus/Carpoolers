@@ -16,7 +16,7 @@ class Rate : AppCompatActivity() {
     var arrList: ArrayList<Number> = ArrayList()
     var finalRating = 0.0
 
-    fun setRating(context: Context, uid: String, rating: Float) {
+    fun setRating(context: Context, uid: String, rating: Float): Float {
 
         val query = users.document(uid)
 
@@ -42,6 +42,7 @@ class Rate : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+        return getRating(context, uid)
     }
 
     fun getRating(context: Context, uid: String): Float {
@@ -60,7 +61,7 @@ class Rate : AppCompatActivity() {
             rating /= ratings.size
 
             Toast.makeText(
-                context, "Ratings loaded",
+                context, "Ratings loaded" + rating,
                 Toast.LENGTH_SHORT
             ).show()
 
@@ -71,7 +72,6 @@ class Rate : AppCompatActivity() {
             ).show()
         }
 
-        Thread.sleep(1000)
 
         return rating
     }

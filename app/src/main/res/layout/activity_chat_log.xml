@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ChatFunction.ChatLogActivity">
 
+
     <EditText
         android:id="@+id/enterMessage"
         android:layout_width="0dp"

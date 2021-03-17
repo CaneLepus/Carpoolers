@@ -1,17 +1,23 @@
 package com.example.carpoolers.ChatFunction
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.carpoolers.R
+import com.example.carpoolers.Rate
+import com.example.carpoolers.RatingActivity
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.rpc.Help
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -24,14 +30,20 @@ class ChatLogActivity : AppCompatActivity() {
     private lateinit var messageButton: Button
     var chatRegistration: ListenerRegistration? = null
     val chatMessages = ArrayList<Messages>()
+    private var userToRate:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContentView(R.layout.activity_chat_log)
         messageButton = findViewById(R.id.sendMesageButton)
         messageButton.setOnClickListener {
             sendMessage()
         }
+
+        userToRate = intent.getStringExtra("toUserID").toString()
+
 
         supportActionBar?.title = "Chat Log"
 
@@ -41,6 +53,30 @@ class ChatLogActivity : AppCompatActivity() {
         sendMesageButton.setOnClickListener {
             sendMessage()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item!!.itemId) {
+            R.id.action_rate -> {
+              val intent = Intent(this,RatingActivity::class.java)
+                if (userToRate != null) {
+                    Log.i("TAG Chat Log Activity: ", userToRate)
+                    intent.putExtra("user", userToRate)
+                    startActivity(intent)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item!!)
+        }
+
+//respond to menu item selection
     }
 
     private fun initList() {
@@ -80,7 +116,7 @@ class ChatLogActivity : AppCompatActivity() {
         chatRegistration = firestore.collection("rooms")
             .document(roomId!!)
             .collection("messages")
-            .addSnapshotListener { messageSnapshot, exception ->
+            .addSnapshotListener { messageSnapshot, _ ->
                 if (messageSnapshot == null || messageSnapshot.isEmpty)
                     return@addSnapshotListener
                 chatMessages.clear()

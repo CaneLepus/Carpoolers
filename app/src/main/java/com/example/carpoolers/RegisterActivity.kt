@@ -135,6 +135,7 @@ class RegisterActivity : AppCompatActivity() {
                         Toast.makeText(this, "Image Uploaded!", Toast.LENGTH_LONG).show()
                         val intent = Intent(this, MainMenuActivity::class.java)
                         startActivity(intent)
+                        finish()
                     }
                     .addOnFailureListener { p0 ->
                         pd.dismiss()

@@ -117,6 +117,7 @@ class MatchesAdapter(val matches: List<User>) : RecyclerView.Adapter<MatchesAdap
                             val intent =
                                 Intent(holder.itemView.context, ChatLogActivity::class.java)
                             intent.putExtra("roomID", document.reference.id)
+                            intent.putExtra("toUserID", document.getString("user2"))
                             holder.itemView.context.startActivity(intent)
                         }
                     }
