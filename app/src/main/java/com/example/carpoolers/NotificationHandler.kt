@@ -120,7 +120,7 @@ class NotificationHandler : FirebaseMessagingService() {
      * @author Shmonn<3
      * @param text String with text to be displayed within the notification
      * @param notificationId Int with unique value for different notifications
-     * @param context write 'this'
+     * @param context write 'this' or 'getContext()'
      */
     fun sendNotification(text: String, notificationId: Int, context: Context) {
         // send notification
