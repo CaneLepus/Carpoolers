@@ -104,6 +104,7 @@ class ChatLogActivity : AppCompatActivity() {
                     )
                 )
         }
+        enterMessage.text.clear()
 
     }
 
