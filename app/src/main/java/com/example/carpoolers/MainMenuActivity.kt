@@ -15,6 +15,11 @@ class MainMenuActivity : AppCompatActivity() {
         setUpTabs()
     }
 
+    override fun onResume() {
+        super.onResume()
+        applicationContext.stopService(Intent(this, NotificationService::class.java))
+    }
+
     private fun setUpTabs() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(HomeFragment(), "")
