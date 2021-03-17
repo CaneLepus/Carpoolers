@@ -35,6 +35,7 @@ class ChatLogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        supportActionBar?.hide()
 
         setContentView(R.layout.activity_chat_log)
         messageButton = findViewById(R.id.sendMesageButton)
