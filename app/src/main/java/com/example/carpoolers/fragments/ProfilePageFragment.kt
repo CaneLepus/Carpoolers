@@ -93,6 +93,8 @@ class ProfilePageFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        (activity as AppCompatActivity).supportActionBar?.hide()
+
         var v: View? = view
 
 
