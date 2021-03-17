@@ -43,8 +43,6 @@ public class SwipeFragmentJava extends Fragment {
     private String lastName;
     private String bio;
 
-    private int numberOfRatings = 0;
-
     private int currentPos;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -224,6 +222,7 @@ public class SwipeFragmentJava extends Fragment {
                         if (auth.getCurrentUser() != null) {
                             if (!uid.equals(auth.getCurrentUser().getUid()) && !mates.contains(auth.getCurrentUser().getUid())) {
                                 if (distance(userLat, userLong, latitude, longitude) < Singleton.INSTANCE.getSwipeDistance()) {
+                                    int numberOfRatings = 0;
 
                                     firstName = (String) document.get("first");
                                     lastName = document.get("last").toString();
