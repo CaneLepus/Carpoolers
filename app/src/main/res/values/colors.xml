@@ -20,7 +20,7 @@
     <color name="colorItemLeft">#E6E4E4</color>
     <color name="colorItemRight">#813fd7</color>
     <color name="colorWhite">#fff</color>
-    <color name="selected_color">#FF0000</color>
+    <color name="selected_color">#428FB5</color>
     <color name="unselected_color">#000000</color>
     <color name="gray">#d3d3d3</color>
 </resources>
